@@ -28,9 +28,9 @@ mongoose_1.default.connection.on('error', function (error) {
 mongoose_1.default.connection.on('connected', function () {
     console.log("Database connected");
 });
-app.set('view engine', 'ejs');
-app.set('views', 'src/views'); //can also be used if folder name is diffrent
-app.use(express_1.default.static(path_1.default.join(__dirname, '/public')));
+// app.set('view engine','ejs');
+// app.set('views','src/views'); //can also be used if folder name is diffrent
+// app.use(express.static(path.join(__dirname, '/public')));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true

@@ -88,10 +88,11 @@ meetRoutes.post('/createRoom', function (req, res) { return __awaiter(void 0, vo
     });
 }); });
 meetRoutes.post('/getToken', function (req, res) {
+    var _a;
     try {
         // console.log(req.body);
         var payload = {
-            access_key: process.env.app_access_key,
+            access_key: process.env.HMS_app_access_key,
             room_id: req.body.room_id,
             user_id: req.body.user_id,
             role: req.body.role,
@@ -100,7 +101,8 @@ meetRoutes.post('/getToken', function (req, res) {
             iat: Math.floor(Date.now() / 1000),
             nbf: Math.floor(Date.now() / 1000)
         };
-        var token = jsonwebtoken_1.default.sign(payload, String(process.env.app_secret), {
+        console.log(payload);
+        var token = jsonwebtoken_1.default.sign(payload, String((_a = process.env.HMS_APP_SECRET) === null || _a === void 0 ? void 0 : _a.replace('\'', '')), {
             algorithm: 'HS256',
             expiresIn: '24h',
             jwtid: uuid_1.default.v4()

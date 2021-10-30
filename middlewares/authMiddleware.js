@@ -6,7 +6,7 @@ var auth = function (req, res, next) {
         if (req.headers.authorization) {
             jsonwebtoken.verify(req.headers.authorization, String(process.env.SECRET_KEY), function (err, decodedToken) {
                 if (err) {
-                    console.log(err);
+                    console.log(err.message);
                     res.status(406).send({ message: 'Authorization Token not acceptable' });
                 }
                 else {

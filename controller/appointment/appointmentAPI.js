@@ -228,7 +228,6 @@ function updateAppointment(req, res) {
             switch (_g.label) {
                 case 0:
                     _g.trys.push([0, 5, , 6]);
-                    console.log(req.body);
                     return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findById(req.body.appointmentId)];
                 case 1:
                     appointment = _g.sent();

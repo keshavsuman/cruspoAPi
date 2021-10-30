@@ -39,15 +39,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAppointmentBooking = void 0;
+exports.bookAppointment = void 0;
+var axios_1 = __importDefault(require("axios"));
 var appointmentsBookingModel_1 = __importDefault(require("../../models/appointmentsBookingModel"));
-function addAppointmentBooking(req, res) {
+function bookAppointment(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var appointment, error_1;
+        var creator, appointment, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/get', {
+                            select: {
+                                domainNames: { $in: [req.body.domainName] }
+                            },
+                            project: {
+                                _id: 1
+                            }
+                        })];
+                case 1:
+                    creator = _a.sent();
+                    console.log(creator.data);
                     return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
                             appointmentId: req.body.appointmentId,
                             firstName: req.body.firstName,
@@ -56,18 +68,18 @@ function addAppointmentBooking(req, res) {
                             bookedDate: req.body.bookedDate,
                             timings: req.body.timings
                         })];
-                case 1:
+                case 2:
                     appointment = _a.sent();
                     res.status(201).send();
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     error_1 = _a.sent();
                     console.log(error_1);
                     res.status(500).send(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
 }
-exports.addAppointmentBooking = addAppointmentBooking;
+exports.bookAppointment = bookAppointment;

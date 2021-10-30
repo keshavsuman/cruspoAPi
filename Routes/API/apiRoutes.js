@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var currencyModel_1 = __importDefault(require("../../models/currencyModel"));
 var axios_1 = __importDefault(require("axios"));
+var bookAppointmentController_1 = require("../../controller/appointment/bookAppointmentController");
 var appointmentRoutes = require('./admin/appointmentRoutes');
 var authenticationRoutes = require('./admin/authenticationRoutes');
 var mailTemplateRoutes = require('./admin/mailTemplateRoutes');
@@ -63,6 +64,7 @@ apiRoutes.use(function (req, res, next) {
 });
 apiRoutes.use('/admin/authentication', authenticationRoutes);
 apiRoutes.use('/learner/auth', learnerAuthentication);
+apiRoutes.post('/bookAppointment', bookAppointmentController_1.bookAppointment);
 apiRoutes.use(auth);
 apiRoutes.use('/admin/appointment', appointmentRoutes);
 apiRoutes.use('/admin/mailTemplate', mailTemplateRoutes);

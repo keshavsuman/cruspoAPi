@@ -16,7 +16,8 @@ var appointmentsBookingSchema = function (prefix) { return new mongoose_1.defaul
     },
     appointmentId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_appointments"
+        ref: prefix + "_appointments",
+        required: true
     },
     timings: {
         startTime: {

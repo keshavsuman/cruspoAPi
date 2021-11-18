@@ -48,27 +48,6 @@ appointmentRouter.get('/:id', appointmentAPI.getAppointment);
 */
 appointmentRouter.get('/getBookedAppointments/:type', appointmentAPI.getBookedAppointments);
 /**
- *  request Method:- POST
- *  request body:
- *  {
- *   "firstName":"keshav",
- *   "lastName":"suman",
- *   "bookedDate":"2021-04-30T18:30:00.000Z",
- *   "email":"keshavsuan96@gmail.com",
- *   "appointmentId":"aerb",
- *   "timings":{
- *           "startTime":"1623416851351",
- *           "endTime":"1623416851351"
- *       }
- *   }
- *
- *   if(success):
- *         return "appointment created"; statusCode 201
- *   if(failure):
- *         return "error.message" statusCode 401
- */
-appointmentRouter.post('/bookAppointment/:appointmentId', appointmentAPI.bookAppointment);
-/**
  *  Request
  *  @method POST
  *  Body:{

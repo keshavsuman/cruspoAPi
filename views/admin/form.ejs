@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Testing Form</title>
+</head>
+<body>
+    <!-- <form action="https://ap-south-1.cruspo.com/cruspoVideos/random-key?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJDNCIWTFVGDIRKKQ%2F20210227%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20210227T053222Z&X-Amz-Expires=900&X-Amz-Signature=791f7140a08d8c384e9052d660a069c5b35ae175d239e4759cc7bd9cabb4fae3&X-Amz-SignedHeaders=host%3Bx-amz-acl&x-amz-acl=public-read"
+     method="POST" enctype="multipart/form-data"> -->
+    <input type="file" name="file" class="fileUpload">
+    <button class="uploadButton">Upload</button>
+    <!-- <button type="submit">Upload</button> -->
+    <!-- </form> -->
+</body>
+<script>
+    var reader = new FileReader();
+    reader.
+    reader.onloadend = function(e)
+    {
+    var img = new Image();
+    var ctx = canvas.getContext("2d");
+    var canvasCopy = document.createElement("canvas");
+    var copyContext = canvasCopy.getContext("2d");
+
+    img.onload = function()
+    {
+        var ratio = 1;
+
+        if(img.width > maxWidth)
+            ratio = maxWidth / img.width;
+        else if(img.height > maxHeight)
+            ratio = maxHeight / img.height;
+
+        canvasCopy.width = img.width;
+        canvasCopy.height = img.height;
+        copyContext.drawImage(img, 0, 0);
+
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width, canvasCopy.height, 0, 0, canvas.width, canvas.height);
+    };
+
+    img.src = reader.result;
+}
+</script>
+<script>
+    $('.uploadButton').on('click',async function(){
+        var file = $('.fileUpload');
+        console.log(JSON.stringify({'fileName':file.val()}));
+       var response  = await fetch('http://localhost:5000/admin/resources/addFile',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({'fileName':file.val()})
+        });
+        // console.log(await response.text());
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT',await response.text());
+        xhr.onload = function()
+        {
+            console.log('upload Success');
+        }
+        xhr.onerror = function()
+        {
+            consoel.log(error);
+        }
+        xhr.send(file);
+        // console.log(xhr.status);
+    });
+</script>
+</html>

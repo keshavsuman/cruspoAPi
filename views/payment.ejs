@@ -1,0 +1,31 @@
+<button id="rzp-button1" style="display: none;">Pay</button>
+<input type="hidden" name="key" value="<%=key%>">
+<input type="hidden" name="amount" value="<%=amount%>">
+<input type="hidden" name="currency" value="<%=currency%>">
+<input type="hidden" name="name" value="<%=name%>">
+<input type="hidden" name="description" value="<%=description%>">
+<input type="hidden" name="image" value="<%=image%>">
+<input type="hidden" name="orderId" value="<%=orderId%>">
+<input type="hidden" name="callbackURL" value="<%=callbackURL%>">
+<input type="hidden" name="prefillName" value="<%=prefillName%>">
+<input type="hidden" name="prefillEmail" value="<%=prefillEmail%>">
+<input type="hidden" name="prefillContact" value="<%=prefillContact%>">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": document.getElementsByName('key')[0].value, 
+    "amount": document.getElementsByName('amount')[0].value, 
+    "currency": document.getElementsByName('currency')[0].value, 
+    "name": document.getElementsByName('name')[0].value, 
+    "description": document.getElementsByName('description')[0].value, 
+    "order_id": document.getElementsByName('orderId')[0].value,
+    "image":"",
+    "callback_url": document.getElementsByName('callbackURL')[0].value,
+};
+    var rzp1 = new Razorpay(options);document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}</script>
+<script>
+    document.getElementById('rzp-button1').click();
+</script>

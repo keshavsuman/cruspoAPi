@@ -55,6 +55,7 @@ var resourceRoutes = require('./admin/resourcesRoutes');
 var websiteRoutes = require('./admin/websiteRoutes');
 var eventRoutes = require('./admin/eventRoutes');
 var learnerAuthentication = require('./learner/authenticationRoutes');
+var profileRoutes = require('./admin/profileRoutes');
 var auth = require('../../middlewares/authMiddleware');
 var apiRoutes = express_1.Router();
 apiRoutes.use(function (req, res, next) {
@@ -67,6 +68,7 @@ apiRoutes.use('/learner/auth', learnerAuthentication);
 apiRoutes.post('/bookAppointment', bookAppointmentController_1.bookAppointment);
 apiRoutes.use(auth);
 apiRoutes.use('/admin/appointment', appointmentRoutes);
+apiRoutes.use('/admin/profile', profileRoutes);
 apiRoutes.use('/admin/mailTemplate', mailTemplateRoutes);
 apiRoutes.use('/admin/mailSend', mailSendRoutes);
 apiRoutes.use('/admin/member', managememberRoutes);

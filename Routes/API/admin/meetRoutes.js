@@ -101,7 +101,6 @@ meetRoutes.post('/getToken', function (req, res) {
             iat: Math.floor(Date.now() / 1000),
             nbf: Math.floor(Date.now() / 1000)
         };
-        console.log(payload);
         var token = jsonwebtoken_1.default.sign(payload, String((_a = process.env.HMS_APP_SECRET) === null || _a === void 0 ? void 0 : _a.replace('\'', '')), {
             algorithm: 'HS256',
             expiresIn: '24h',

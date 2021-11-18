@@ -10,7 +10,6 @@ var path_1 = __importDefault(require("path"));
 var cors_1 = __importDefault(require("cors"));
 var goToPageRoutes = require('./Routes/gotopageRoutes');
 var paymentRoutes = require('./Routes/paymentRoutes');
-var bookAppointmentRoutes = require('./Routes/bookAppointmentRoutes');
 var formRoutes = require('./Routes/formRoutes');
 var apiRoutes = require('./Routes/API/apiRoutes');
 var app = express_1.default();
@@ -28,18 +27,16 @@ mongoose_1.default.connection.on('error', function (error) {
 mongoose_1.default.connection.on('connected', function () {
     console.log("Database connected");
 });
-// app.set('view engine','ejs');
-// app.set('views','src/views'); //can also be used if folder name is diffrent
-// app.use(express.static(path.join(__dirname, '/public')));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true
 }));
+app.set('view engine', 'ejs');
+app.set('views', path_1.default.join(__dirname, './render'));
 app.use('/api', apiRoutes);
 app.use('/goToPage', goToPageRoutes);
 app.use('/form', formRoutes);
 app.use('/payment', paymentRoutes);
-app.use('/bookAppointment', bookAppointmentRoutes);
 app.listen(process.env.PORT, function () {
     console.log("Server is running in port " + process.env.PORT);
 });

@@ -58,46 +58,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.downloadForm = exports.subscribe = exports.contactUs = void 0;
-var contactUsModel_1 = __importDefault(require("../models/contactUsModel"));
+exports.register = exports.downloadForm = exports.subscribe = void 0;
+// import contactUsModel from '../models/contactUsModel';
 var downloadFormModel_1 = __importDefault(require("../models/downloadFormModel"));
 var subscribeModel_1 = __importDefault(require("../models/subscribeModel"));
 var mailSender = __importStar(require("./mail/sendMailController"));
 var cruspoFormModel_1 = __importDefault(require("../models/cruspoFormModel"));
 var axios_1 = __importDefault(require("axios"));
-function contactUs(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contactUsModel_1.default.create({
-                            'firstName': req.body.firstName,
-                            'lastName': req.body.lastName,
-                            'email': req.body.email,
-                            'mobileNumber': req.body.mobileNumber,
-                            'queryMessage': req.body.queryMessage,
-                        })];
-                case 1:
-                    _a.sent();
-                    mailSender.sendFormSubmissionMailToCreator(String(process.env.userMail), 'Contact Form', String(process.env.userWebsite), req.body);
-                    // mailSender.sendFormSubmissionMailToUser(req.body.fistName);
-                    res.redirect('https://' + req.query.redirect);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    res.send(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.contactUs = contactUs;
+// export async function contactUs(req:Request,res:Response) {
+//     try {
+//         await contactUsModel.create({
+//             'firstName':req.body.firstName, 
+//             'lastName':req.body.lastName,
+//             'email':req.body.email,
+//             'mobileNumber':req.body.mobileNumber,
+//             'queryMessage':req.body.queryMessage,
+//         });
+//         mailSender.sendFormSubmissionMailToCreator(String(process.env.userMail),'Contact Form',String(process.env.userWebsite),req.body);
+//         // mailSender.sendFormSubmissionMailToUser(req.body.fistName);
+//         res.redirect('https://'+req.query.redirect);
+//     } catch (error) {
+//         res.send(error);
+//     }
+// }
 function subscribe(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_2;
+        var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -113,8 +99,8 @@ function subscribe(req, res) {
                     res.redirect('https://' + req.query.redirect);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_2 = _a.sent();
-                    res.status(500).send(error_2);
+                    error_1 = _a.sent();
+                    res.status(500).send(error_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -124,7 +110,7 @@ function subscribe(req, res) {
 exports.subscribe = subscribe;
 function downloadForm(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_3;
+        var error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -140,8 +126,8 @@ function downloadForm(req, res) {
                     res.redirect('https://' + req.query.redirect);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_3 = _a.sent();
-                    res.status(400).send(error_3);
+                    error_2 = _a.sent();
+                    res.status(400).send(error_2);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -156,7 +142,7 @@ function register(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, (cruspoFormModel_1.default(req.body.domainName).create(req.body))];
+                    return [4 /*yield*/, (cruspoFormModel_1.default(req.hostname).create(req.body))];
                 case 1:
                     formData = _a.sent();
                     formData.set('title', req.params.title);
@@ -164,12 +150,11 @@ function register(req, res) {
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { $in: { domainNames: [req.body.domainName] } },
+                            select: { $in: { domainNames: [req.hostname] } },
                             project: { email: 1, _id: 0 }
                         })];
                 case 3:
                     response = _a.sent();
-                    console.log(response.data);
                     if (req.body.email) {
                         // mailSender.sendFormSubmissionMailToUser(res,req.body,req.params.title);
                     }

@@ -23,6 +23,6 @@ var express_1 = require("express");
 var gotopageController = __importStar(require("../../../controller/website/gotopageControllerAPI"));
 var websiteRouter = express_1.Router();
 websiteRouter.post('/recommend', gotopageController.newRecommendation);
-websiteRouter.post('/contactus', gotopageController.contactUs);
+// websiteRouter.post('/contactus',gotopageController.contactUs);
 websiteRouter.post('/updateGoToPage', gotopageController.updateGoToPage);
 module.exports = websiteRouter;

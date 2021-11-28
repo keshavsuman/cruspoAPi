@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var formController = __importStar(require("../controller/formController"));
 var formRoutes = express_1.Router();
-formRoutes.post('/contactUs', formController.contactUs);
+// formRoutes.post('/contactUs',formController.contactUs);
 formRoutes.post('/subscribe', formController.subscribe);
 formRoutes.post('/downloadForm', formController.downloadForm);
 formRoutes.post('/:title/register', formController.register);

@@ -150,7 +150,7 @@ function register(req, res) {
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { $in: { domainNames: [req.body.domainName] } },
+                            select: { domainNames: { $in: [req.body.domainName] } },
                             project: { email: 1, _id: 0 }
                         })];
                 case 3:

@@ -142,7 +142,7 @@ function register(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, (cruspoFormModel_1.default(req.hostname).create(req.body))];
+                    return [4 /*yield*/, (cruspoFormModel_1.default(req.body.domainName).create(req.body))];
                 case 1:
                     formData = _a.sent();
                     formData.set('title', req.params.title);
@@ -150,7 +150,7 @@ function register(req, res) {
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { $in: { domainNames: [req.hostname] } },
+                            select: { $in: { domainNames: [req.body.domainName] } },
                             project: { email: 1, _id: 0 }
                         })];
                 case 3:

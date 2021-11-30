@@ -18,6 +18,9 @@ var mailTemplateSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    mailEvent: {
+        type: String
+    },
     updatedOn: {
         type: Date,
     },

@@ -52,10 +52,11 @@ function createTemplate(req, res) {
                             templateName: req.body.templateName,
                             subject: req.body.subject,
                             body: req.body.body,
+                            mailEvent: req.body.mailEvent,
                         })];
                 case 1:
                     template = _a.sent();
-                    res.status(201).send();
+                    res.status(201).send(template);
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();

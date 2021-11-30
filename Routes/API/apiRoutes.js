@@ -66,6 +66,7 @@ apiRoutes.use(function (req, res, next) {
 apiRoutes.use('/admin/authentication', authenticationRoutes);
 apiRoutes.use('/learner/auth', learnerAuthentication);
 apiRoutes.post('/bookAppointment', bookAppointmentController_1.bookAppointment);
+// apiroutes.post('/')
 apiRoutes.use(auth);
 apiRoutes.use('/admin/appointment', appointmentRoutes);
 apiRoutes.use('/admin/profile', profileRoutes);

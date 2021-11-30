@@ -137,29 +137,27 @@ function downloadForm(req, res) {
 exports.downloadForm = downloadForm;
 function register(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var formData, response, e_1;
+        var response, formData, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, (cruspoFormModel_1.default(req.body.domainName).create(req.body))];
+                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
+                            select: { domainNames: { $in: [req.body.domainName] } },
+                            project: { email: 1, _id: 0, userName: 1 }
+                        })];
                 case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, (cruspoFormModel_1.default(response.data.userName).create(req.body))];
+                case 2:
                     formData = _a.sent();
                     formData.set('title', req.params.title);
                     return [4 /*yield*/, formData.save()];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { domainNames: { $in: [req.body.domainName] } },
-                            project: { email: 1, _id: 0 }
-                        })];
                 case 3:
-                    response = _a.sent();
+                    _a.sent();
                     if (req.body.email) {
-                        // mailSender.sendFormSubmissionMailToUser(res,req.body,req.params.title);
+                        mailSender.sendFormSubmissionMailToCreator(response.data.email, req.params.title, response.data.userName, req.body);
                     }
-                    // m/ailSender.sendFormSubmissionMailToCreator(String(process.env.userMail),'Contact Form',String(process.env.userWebsite),req.body);
-                    res.redirect(req.protocol + '://' + req.query.redirect);
                     return [3 /*break*/, 5];
                 case 4:
                     e_1 = _a.sent();

@@ -158,6 +158,7 @@ function register(req, res) {
                     if (req.body.email) {
                         mailSender.sendFormSubmissionMailToCreator(response.data.email, req.params.title, response.data.userName, req.body);
                     }
+                    res.redirect(req.protocol + '://' + req.query.redirect);
                     return [3 /*break*/, 5];
                 case 4:
                     e_1 = _a.sent();

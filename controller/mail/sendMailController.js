@@ -58,7 +58,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendSubscribeMail = exports.sendMailToFormResponse = exports.sendMailForWebsiteRequest = exports.sendRemainderMail = exports.sendAppointmentRemainderMail = exports.sendRemainderMailTest = exports.sendDownloadFormMail = exports.sendResetPasswordMailToLearner = exports.sendResetPasswordMailToCreator = exports.sendFormSubmissionMailToCreator = exports.sendLearnerRegisterMailToCreator = void 0;
+exports.sendSubscribeMail = exports.sendMailToFormResponse = exports.sendMailForWebsiteRequest = exports.sendRemainderMail = exports.sendAppointmentRemainderMail = exports.sendRemainderMailTest = exports.sendDownloadFormMail = exports.sendResetPasswordMailToLearner = exports.sendResetPasswordMailToCreator = exports.sendFormSubmissionMailToUser = exports.sendFormSubmissionMailToCreator = exports.sendLearnerRegisterMailToCreator = void 0;
 var templates_mail_1 = __importDefault(require("./templates.mail"));
 var transporters = __importStar(require("./transporters.mail"));
 var mailTemplateModel_1 = __importDefault(require("../../models/mail/mailTemplateModel"));
@@ -90,58 +90,66 @@ function sendLearnerRegisterMailToCreator(to) {
 exports.sendLearnerRegisterMailToCreator = sendLearnerRegisterMailToCreator;
 function sendFormSubmissionMailToCreator(to, title, userName, data) {
     return __awaiter(this, void 0, void 0, function () {
-        var template, mail, error_1;
+        var mail;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mailTemplateModel_1.default(userName).findOne({ mailEvent: title })];
-                case 1:
-                    template = _a.sent();
-                    if (template) {
-                        mail = {
-                            to: to,
-                            from: 'developer@cruspo.com',
-                            subject: template.subject,
-                            text: eval('`' + template.body + '`') + '\n\n',
-                        };
-                        transporters.developerTransporter.sendMail(mail);
-                    }
-                    else {
-                        console.log('template not found');
-                    }
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.log(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+            try {
+                mail = {
+                    to: to,
+                    from: 'developer@cruspo.com',
+                    subject: "contact us form submission",
+                    text: "You got the following submission on " + title + ",\nFirstName: " + data['firstName'] + ",\nLastName: " + data['lastName'] + ",\nemail: " + data['email'] + ",\ncontactNumber :" + data['contactNumber'] + ",\nquery: " + data['query'] + "\n                ",
+                };
+                transporters.developerTransporter.sendMail(mail);
+                // }else{
+                //     console.log('template not found');
+                // }
             }
+            catch (error) {
+                console.log(error);
+            }
+            return [2 /*return*/];
         });
     });
 }
 exports.sendFormSubmissionMailToCreator = sendFormSubmissionMailToCreator;
-// export async function sendFormSubmissionMailToUser(res:Response,body:any,title:string){
-//     try{
-//         var transporter = await transporters.getCreatorTransport();
-//         var template = await mailTemplateModel(res.get('userName')).find({templateName:title});
-//         var d = moment(new Date(2021,7,7)).format('LLLL');
-//         var creatorName = process.env.USERNAME;
-//         var creatorEmail = process.env.userMail;
-//         // var creatorContactNumber = "(+91) 98202 94061";
-//         var parsedBody = eval('`'+template[0]['body']+'`');
-//         var parsedSubject = eval('`'+template[0]['subject']+'`');
-//         transporter?.sendMail({
-//             subject:parsedSubject,
-//             text:parsedBody,
-//             to:body.email,
-//             from: process.env.USERNAME+' <'+process.env.userMail+'>',
-//         });
-//     }catch(error)
-//     {
-//         console.log(error);
-//     }
-// }
+function sendFormSubmissionMailToUser(title, data, creator) {
+    return __awaiter(this, void 0, void 0, function () {
+        var transporter, template, parsedBody, parsedSubject, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, transporters.getCreatorTransport(creator)];
+                case 1:
+                    transporter = _a.sent();
+                    return [4 /*yield*/, mailTemplateModel_1.default(creator['userName']).findOne({ mailEvent: title })];
+                case 2:
+                    template = _a.sent();
+                    // var d = moment(new Date(2021,7,7)).format('LLLL');
+                    if (template) {
+                        parsedBody = eval('`' + template['body'] + '`');
+                        parsedSubject = eval('`' + template['subject'] + '`');
+                        transporter === null || transporter === void 0 ? void 0 : transporter.sendMail({
+                            subject: parsedSubject,
+                            text: parsedBody,
+                            to: data['email'],
+                            from: creator['firstName'] + " " + creator['lastName'] + " <" + creator['email'] + ">",
+                        });
+                    }
+                    else {
+                        console.log('template not found');
+                    }
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.log(error_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.sendFormSubmissionMailToUser = sendFormSubmissionMailToUser;
 function sendResetPasswordMailToCreator(email, link) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {

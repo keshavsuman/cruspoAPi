@@ -144,7 +144,7 @@ function register(req, res) {
                     _a.trys.push([0, 4, , 5]);
                     return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
                             select: { domainNames: { $in: [req.body.domainName] } },
-                            project: { email: 1, _id: 0, userName: 1 }
+                            project: { email: 1, _id: 0, userName: 1, refreshToken: 1, firstName: 1, lastName: 1 }
                         })];
                 case 1:
                     response = _a.sent();
@@ -156,6 +156,7 @@ function register(req, res) {
                 case 3:
                     _a.sent();
                     if (req.body.email) {
+                        mailSender.sendFormSubmissionMailToUser(req.params.title, req.body, response.data);
                         mailSender.sendFormSubmissionMailToCreator(response.data.email, req.params.title, response.data.userName, req.body);
                     }
                     res.redirect(req.protocol + '://' + req.query.redirect);

@@ -66,6 +66,7 @@ apiRoutes.use(function (req, res, next) {
 apiRoutes.use('/admin/authentication', authenticationRoutes);
 apiRoutes.use('/learner/auth', learnerAuthentication);
 apiRoutes.post('/bookAppointment', bookAppointmentController_1.bookAppointment);
+apiRoutes.use('/admin/meet', meetRoutes);
 // apiroutes.post('/')
 apiRoutes.use(auth);
 apiRoutes.use('/admin/appointment', appointmentRoutes);
@@ -78,7 +79,6 @@ apiRoutes.use('/admin/session', sessionRoutes);
 apiRoutes.use('/admin/resource', resourceRoutes);
 apiRoutes.use('/admin/website', websiteRoutes);
 apiRoutes.use('/admin/event', eventRoutes);
-apiRoutes.use('/admin/meet', meetRoutes);
 apiRoutes.post('/admin/helpAndSupport/raiseTicket', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_1;
     return __generator(this, function (_a) {

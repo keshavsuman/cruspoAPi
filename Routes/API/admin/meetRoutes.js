@@ -45,8 +45,9 @@ var uuid_1 = __importDefault(require("uuid"));
 var express_1 = require("express");
 var axios_1 = __importDefault(require("axios"));
 var roomModel_1 = __importDefault(require("../../../models/live/roomModel"));
+var auth = require('../../../middlewares/authMiddleware');
 var meetRoutes = express_1.Router();
-meetRoutes.post('/createRoom', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+meetRoutes.post('/createRoom', auth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var roomOptions, room, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -56,7 +57,7 @@ meetRoutes.post('/createRoom', function (req, res) { return __awaiter(void 0, vo
                     roomName: req.body.roomName,
                     roomDescription: req.body.roomDescription
                 };
-                return [4 /*yield*/, createRoom(roomOptions)];
+                return [4 /*yield*/, createRoom(roomOptions, res.get('_id'))];
             case 1:
                 room = _a.sent();
                 return [4 /*yield*/, roomModel_1.default(res.get('userName')).create(room)];
@@ -100,7 +101,7 @@ meetRoutes.post('/getToken', function (req, res) {
         console.log(error);
     }
 });
-function createRoom(roomOptions) {
+function createRoom(roomOptions, creatorId) {
     return __awaiter(this, void 0, void 0, function () {
         var authToken, response, error_2;
         return __generator(this, function (_a) {
@@ -121,12 +122,13 @@ function createRoom(roomOptions) {
                     return [4 /*yield*/, axios_1.default.post(process.env.HMS_PROD_URL + '/rooms', {
                             "name": roomOptions.roomName,
                             "description": roomOptions.roomDescription,
+                            "template": "default_videoconf_0183f6a0-4cfc-4a52-a641-c732027ea04d",
                             "recording_info": {
-                                "enabled": true,
+                                "enabled": false,
                                 "upload_info": {
                                     "type": "s3",
-                                    "location": "test-bucket",
-                                    "prefix": "test-prefix",
+                                    "location": "100msrecordings-cruspo",
+                                    "prefix": creatorId,
                                     "options": {
                                         "region": "ap-south-1"
                                     },

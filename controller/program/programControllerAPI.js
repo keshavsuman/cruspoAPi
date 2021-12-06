@@ -40,20 +40,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSubCategories = exports.getCategories = exports.deleteBatch = exports.updateBatch = exports.createBatch = exports.getProgramById = exports.getPrograms = exports.deleteprogram = exports.updatedprogram = exports.createProgram = void 0;
+var mongoose_1 = require("mongoose");
 var batchModel_1 = __importDefault(require("../../models/batchModel"));
 var programCategoryModel_1 = __importDefault(require("../../models/programCategoryModel"));
 var programSubCategoryModel_1 = __importDefault(require("../../models/programSubCategoryModel"));
 var programModel_1 = __importDefault(require("../../models/programModel"));
 var errorModel_1 = __importDefault(require("../../models/errorModel"));
-var mongoose_1 = __importDefault(require("mongoose"));
+var mongoose_2 = __importDefault(require("mongoose"));
 var moduleModel_1 = __importDefault(require("../../models/moduleModel"));
 function createProgram(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var newCategory, program, error_1;
+        var program, newCategory, newSubCategory, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
+                    _a.trys.push([0, 12, , 13]);
                     return [4 /*yield*/, programModel_1.default(res.get('userName')).create({
                             'programTitle': req.body.programTitle,
                             'programThumbnail': req.body.programThumbnail,
@@ -71,23 +72,43 @@ function createProgram(req, res) {
                         })];
                 case 1:
                     program = _a.sent();
-                    if (!req.body.newCategory) return [3 /*break*/, 3];
-                    return [4 /*yield*/, programCategoryModel_1.default(res.get('userName')).create({
-                            categoryName: req.body.newCategory
-                        })];
-                case 2:
-                    newCategory = _a.sent();
-                    program.programCategory = req.body.newCategory;
-                    program.save();
-                    return [3 /*break*/, 4];
-                case 3:
+                    if (!mongoose_1.isValidObjectId(req.body.programCategory)) return [3 /*break*/, 3];
                     program.programCategory = req.body.programCategory;
-                    program.save();
-                    _a.label = 4;
-                case 4:
-                    res.status(201).send();
+                    return [4 /*yield*/, program.save()];
+                case 2:
+                    _a.sent();
                     return [3 /*break*/, 6];
+                case 3: return [4 /*yield*/, programCategoryModel_1.default(res.get('userName')).create({
+                        categoryName: req.body.programCategory
+                    })];
+                case 4:
+                    newCategory = _a.sent();
+                    program.programCategory = newCategory._id;
+                    return [4 /*yield*/, program.save()];
                 case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6:
+                    if (!mongoose_1.isValidObjectId(req.body.programSubCategory)) return [3 /*break*/, 8];
+                    program.programSubCategory = req.body.programSubCategory;
+                    return [4 /*yield*/, program.save()];
+                case 7:
+                    _a.sent();
+                    return [3 /*break*/, 11];
+                case 8: return [4 /*yield*/, programSubCategoryModel_1.default(res.get('userName')).create({
+                        subCategoryName: req.body.programCategory
+                    })];
+                case 9:
+                    newSubCategory = _a.sent();
+                    program.programSubCategory = newSubCategory._id;
+                    return [4 /*yield*/, program.save()];
+                case 10:
+                    _a.sent();
+                    _a.label = 11;
+                case 11:
+                    res.status(201).send();
+                    return [3 /*break*/, 13];
+                case 12:
                     error_1 = _a.sent();
                     if (process.env.ENVIORMENT == 'development') {
                         console.log(error_1);
@@ -100,8 +121,8 @@ function createProgram(req, res) {
                         });
                     }
                     res.status(403).send(error_1);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 13];
+                case 13: return [2 /*return*/];
             }
         });
     });
@@ -451,7 +472,7 @@ function getSubCategories(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, programSubCategoryModel_1.default(res.get('userName')).find({
-                            programCategory: new mongoose_1.default.Schema.Types.ObjectId(req.params.categoryId)
+                            programCategory: new mongoose_2.default.Schema.Types.ObjectId(req.params.categoryId)
                         })];
                 case 1:
                     subCategories = _a.sent();

@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSubCategories = exports.getCategories = exports.deleteBatch = exports.updateBatch = exports.createBatch = exports.getProgramById = exports.getPrograms = exports.deleteprogram = exports.updatedprogram = exports.createProgram = void 0;
+exports.createBatchTming = exports.getSubCategories = exports.getCategories = exports.deleteBatch = exports.updateBatch = exports.createBatch = exports.getProgramById = exports.getPrograms = exports.deleteprogram = exports.updatedprogram = exports.createProgram = void 0;
 var mongoose_1 = require("mongoose");
 var batchModel_1 = __importDefault(require("../../models/batchModel"));
 var programCategoryModel_1 = __importDefault(require("../../models/programCategoryModel"));
@@ -55,6 +55,7 @@ function createProgram(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 12, , 13]);
+                    console.log(req.body);
                     return [4 /*yield*/, programModel_1.default(res.get('userName')).create({
                             'programTitle': req.body.programTitle,
                             'programThumbnail': req.body.programThumbnail,
@@ -96,7 +97,8 @@ function createProgram(req, res) {
                     _a.sent();
                     return [3 /*break*/, 11];
                 case 8: return [4 /*yield*/, programSubCategoryModel_1.default(res.get('userName')).create({
-                        subCategoryName: req.body.programCategory
+                        programCategory: program.programCategory,
+                        subCategory: req.body.programCategory
                     })];
                 case 9:
                     newSubCategory = _a.sent();
@@ -489,3 +491,28 @@ function getSubCategories(req, res) {
     });
 }
 exports.getSubCategories = getSubCategories;
+function createBatchTming(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var batchTime, e_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.batchId, {
+                        // $push:{timings:timing._id}
+                        })];
+                case 1:
+                    batchTime = _a.sent();
+                    res.status(200).send(batchTime);
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_3 = _a.sent();
+                    console.log(e_3);
+                    res.status(500).send(e_3);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.createBatchTming = createBatchTming;

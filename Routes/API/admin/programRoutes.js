@@ -72,6 +72,7 @@ programRoutes.post('/:programId/createBatch', programController.createBatch);
 programRoutes.patch('/:programId/updateBatch/:batchId', programController.updateBatch);
 programRoutes.delete('/:programId/deleteBatch/:batchId', programController.deleteBatch);
 programRoutes.get('/:id', programController.getProgramById);
+programRoutes.post('/:programId/:batchId/createBatchTiming', programController.createBatchTming);
 programRoutes.post('/:programId/addModule', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var newModule, e_1;
     return __generator(this, function (_a) {

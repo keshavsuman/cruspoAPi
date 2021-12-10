@@ -26,5 +26,5 @@ var auth = require('../../../middlewares/authMiddleware');
 var authenticationRoutes = express_1.Router();
 authenticationRoutes.post('/login', authenticationController.login);
 authenticationRoutes.post('/updateProfle', auth, authenticationController.updateProfile);
-authenticationRoutes.post('/authGoogle', authorization_1.getAccessToken);
+authenticationRoutes.get('/authGoogle', authorization_1.getAccessToken);
 module.exports = authenticationRoutes;

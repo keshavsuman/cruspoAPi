@@ -21,8 +21,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var authenticationController = __importStar(require("../../../controller/authenticationController"));
+var authorization_1 = require("../../../controller/google/authorization");
 var auth = require('../../../middlewares/authMiddleware');
 var authenticationRoutes = express_1.Router();
 authenticationRoutes.post('/login', authenticationController.login);
 authenticationRoutes.post('/updateProfle', auth, authenticationController.updateProfile);
+authenticationRoutes.post('/authGoogle', authorization_1.getAccessToken);
 module.exports = authenticationRoutes;

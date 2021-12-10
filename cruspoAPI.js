@@ -12,6 +12,7 @@ var goToPageRoutes = require('./Routes/gotopageRoutes');
 var paymentRoutes = require('./Routes/paymentRoutes');
 var formRoutes = require('./Routes/formRoutes');
 var apiRoutes = require('./Routes/API/apiRoutes');
+var authenticationRoutes = require('./Routes/API/authenticationRoutes');
 var app = express_1.default();
 dotenv_1.default.config({
     path: path_1.default.resolve(__dirname, '.env')
@@ -37,6 +38,7 @@ app.use('/api', apiRoutes);
 app.use('/goToPage', goToPageRoutes);
 app.use('/form', formRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/authentication', authenticationRoutes);
 app.listen(process.env.PORT, function () {
     console.log("Server is running in port " + process.env.PORT);
 });

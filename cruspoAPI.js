@@ -12,7 +12,7 @@ var goToPageRoutes = require('./Routes/gotopageRoutes');
 var paymentRoutes = require('./Routes/paymentRoutes');
 var formRoutes = require('./Routes/formRoutes');
 var apiRoutes = require('./Routes/API/apiRoutes');
-var authenticationRoutes = require('./Routes/API/authenticationRoutes');
+var authenticationRoutes = require('./Routes/authenticationRoutes');
 var app = express_1.default();
 dotenv_1.default.config({
     path: path_1.default.resolve(__dirname, '.env')

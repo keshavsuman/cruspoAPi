@@ -58,7 +58,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.collectPayment = exports.pay = exports.verifySignature = void 0;
+exports.collectPayment = exports.pay = exports.verifySignature = exports.createOrder = void 0;
 var crypto_1 = __importDefault(require("crypto"));
 var paymentLogModel_1 = __importStar(require("../../models/payment/paymentLogModel"));
 var axios_1 = __importDefault(require("axios"));
@@ -88,6 +88,9 @@ function createOrder(user, price, currency, access_token, paymentFor) {
                             paymentStatus: paymentLogModel_1.PaymentStatus.PENDING,
                             currency: currency,
                             amount: price,
+                            // metaData:{
+                            //   formId:
+                            // }
                         })];
                 case 2:
                     paymentLog = _a.sent();
@@ -101,6 +104,7 @@ function createOrder(user, price, currency, access_token, paymentFor) {
         });
     });
 }
+exports.createOrder = createOrder;
 function verifySignature(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var update, error_2;
@@ -114,14 +118,15 @@ function verifySignature(req, res) {
                     if (update) {
                         switch (update['paymentFor']) {
                             case 'APPOINTMENT':
-                                res.status;
                                 res.redirect('https://' + process.env.userWebsite);
                                 break;
                             case 'MISCELLANEOUS':
                                 res.redirect('https://' + process.env.userWebsite);
                                 break;
+                            case 'FORM':
+                                res.redirect('https://effortlessafacademy.com/thank-you.html');
                             default:
-                                res.redirect('https://' + process.env.userWebsite);
+                                res.redirect('https://effortlessafacademy.com/thank-you.html');
                                 console.log('Nothing happened');
                         }
                     }

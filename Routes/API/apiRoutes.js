@@ -56,6 +56,7 @@ var websiteRoutes = require('./admin/websiteRoutes');
 var eventRoutes = require('./admin/eventRoutes');
 var learnerAuthentication = require('./learner/authenticationRoutes');
 var profileRoutes = require('./admin/profileRoutes');
+var paymentRoutes = require('./admin/paymentRoutes');
 var auth = require('../../middlewares/authMiddleware');
 var apiRoutes = express_1.Router();
 apiRoutes.use(function (req, res, next) {
@@ -79,6 +80,7 @@ apiRoutes.use('/admin/session', sessionRoutes);
 apiRoutes.use('/admin/resource', resourceRoutes);
 apiRoutes.use('/admin/website', websiteRoutes);
 apiRoutes.use('/admin/event', eventRoutes);
+apiRoutes.use('/admin/payment', paymentRoutes);
 apiRoutes.post('/admin/helpAndSupport/raiseTicket', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_1;
     return __generator(this, function (_a) {

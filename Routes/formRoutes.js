@@ -21,8 +21,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var formController = __importStar(require("../controller/formController"));
+var auth = require('../middlewares/authMiddleware');
 var formRoutes = express_1.Router();
 // formRoutes.post('/contactUs',formController.contactUs);
+formRoutes.post('/createForm', auth, formController.createForm);
+formRoutes.post('/:formId', formController.paidSubmit);
 formRoutes.post('/subscribe', formController.subscribe);
 formRoutes.post('/downloadForm', formController.downloadForm);
 formRoutes.post('/:title/register', formController.register);

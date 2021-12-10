@@ -66,7 +66,7 @@ var mailAdminTemplateModel_1 = __importDefault(require("../../models/mail/mailAd
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var moment_1 = __importDefault(require("moment"));
 var learnerModel_1 = __importDefault(require("../../models/manageMember/learnerModel"));
-var cruspoFormModel_1 = __importDefault(require("../../models/cruspoFormModel"));
+var cruspoFormSubmissionModel_1 = __importDefault(require("../../models/forms/cruspoFormSubmissionModel"));
 var axios_1 = __importDefault(require("axios"));
 function sendLearnerRegisterMailToCreator(to) {
     return __awaiter(this, void 0, void 0, function () {
@@ -108,12 +108,6 @@ function sendFormSubmissionMailToCreator(to, title, userName, data) {
                             subject: parsedSubject,
                             text: parsedBody,
                         };
-                        //             You got the following submission on ${title},
-                        // FirstName: ${data['firstName']},
-                        // LastName: ${data['lastName']},
-                        // email: ${data['email']},
-                        // contactNumber :${data['contactNumber']},
-                        // query: ${data['query']}
                         transporters.developerTransporter.sendMail(mail);
                     }
                     else {
@@ -361,7 +355,7 @@ function sendMailToFormResponse(req, res) {
                     return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).find({ templateName: req.body.templateName })];
                 case 1:
                     mailTemplate = _a.sent();
-                    return [4 /*yield*/, cruspoFormModel_1.default(req.headers.origin).find({ purpose: req.body.formTitle }).skip(480).limit(480)];
+                    return [4 /*yield*/, cruspoFormSubmissionModel_1.default(req.headers.origin).find({ purpose: req.body.formTitle }).skip(480).limit(480)];
                 case 2:
                     recipients = _a.sent();
                     if (recipients.length > 500) {

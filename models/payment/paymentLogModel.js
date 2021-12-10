@@ -24,7 +24,7 @@ var paymentSchema = new mongoose_1.default.Schema({
     },
     paymentFor: {
         type: String,
-        enum: ['APPOINTMENT', 'COURSE', 'ASSETDOWNLOAD', 'MISCELLANEOUS']
+        enum: ['APPOINTMENT', 'COURSE', 'ASSETDOWNLOAD', 'MISCELLANEOUS', 'FORM']
     },
     amount: {
         type: Number,

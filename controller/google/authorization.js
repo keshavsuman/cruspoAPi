@@ -43,7 +43,11 @@ function getAccessToken(req, res) {
         var oauth2Client, scopes, url;
         return __generator(this, function (_a) {
             try {
-                oauth2Client = new googleapis_1.google.auth.OAuth2(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.REDIRECTURL);
+                oauth2Client = new googleapis_1.google.auth.OAuth2(
+                // '347326313248-eeaogqkl03ak7dcs0utqtkfvg28r871h.apps.googleusercontent.com',
+                // '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',
+                // 'https://authentication.cruspo.com/auth/googleAuthentication'
+                process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, process.env.REDIRECTURL);
                 scopes = [
                     'https://mail.google.com/',
                     'https://www.googleapis.com/auth/userinfo.profile',

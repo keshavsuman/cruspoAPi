@@ -9,7 +9,7 @@ function cruspoFormSubmissions(prefix) {
     try {
         cruspoForm = mongoose_1.default.model(prefix + "_formSubissions");
     }
-    catch (_a) {
+    catch (error) {
         cruspoForm = mongoose_1.default.model(prefix + "_formSubmissions", new mongoose_1.default.Schema({}, { strict: false }));
     }
     return cruspoForm;

@@ -13,7 +13,7 @@ var subCategorySchema = new mongoose_1.default.Schema({
     subCategory: {
         type: String,
         required: true,
-        // unique:true,
+        unique: true,
         trim: true
     }
 });

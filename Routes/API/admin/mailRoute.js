@@ -23,26 +23,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var googleAuth = __importStar(require("../controller/google/authorization"));
-var authenticationController = __importStar(require("../controller/authenticationController"));
-var authenticationRoutes = express_1.default.Router();
-authenticationRoutes.get('/', function (req, res) {
-    res.render('login', {
-        error: ''
-    });
-});
-authenticationRoutes.get('/resetPassword/:token', function (req, res) {
-    res.render('change-password', {
-        error: ''
-    });
-});
-authenticationRoutes.get('/forgotpassword', function (req, res) {
-    res.render('forgot-password', {
-        error: ''
-    });
-});
-authenticationRoutes.post('/forgotpassword', authenticationController.forgetPassword);
-authenticationRoutes.post('/login', authenticationController.login);
-authenticationRoutes.post('/resetPassword', authenticationController.resetPassword);
-authenticationRoutes.get('/googleAuth', googleAuth.getAccessToken);
-module.exports = authenticationRoutes;
+var mailSendController = __importStar(require("../../../controller/mail/sendMailController"));
+var mailTemplateController = __importStar(require("../../../controller/mail/templateControllerAPI"));
+var mailRoutes = express_1.default();
+mailRoutes.post('/sendLearnerJoinMail', mailSendController.sendLearnerRegisterMailToCreator);
+mailRoutes.get('/sendRemainderMail', mailSendController.sendRemainderMail);
+mailRoutes.post('/sendRemainderMailTest', mailSendController.sendRemainderMailTest);
+mailRoutes.post('/sendMailToFormResponse', mailSendController.sendMailToFormResponse);
+mailRoutes.post('/createTemplate', mailTemplateController.createTemplate);
+mailRoutes.post('/getTemplates', mailTemplateController.getMailTemplates);
+mailRoutes.post('/updateTemplate/:templateId', mailTemplateController.updateTemplate);
+mailRoutes.delete('/deleteTemplate/:templateId', mailTemplateController.deleteTemplate);
+module.exports = mailRoutes;

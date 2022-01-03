@@ -18,16 +18,8 @@ var mailTemplateSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
-    mailEvent: {
-        type: String
-    },
-    updatedOn: {
-        type: Date,
-    },
-    createdOn: {
-        type: Date,
-        default: Date.now()
-    }
+}, {
+    timestamps: true
 });
 function mailTemplateModel(prefix) {
     return mongoose_1.default.model(prefix + "_mailTemplate", mailTemplateSchema);

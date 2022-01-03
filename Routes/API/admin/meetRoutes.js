@@ -44,44 +44,54 @@ var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var uuid_1 = __importDefault(require("uuid"));
 var express_1 = require("express");
 var axios_1 = __importDefault(require("axios"));
-var roomModel_1 = __importDefault(require("../../../models/live/roomModel"));
-var auth = require('../../../middlewares/authMiddleware');
+// jsonwebtoken.sign(
+//     {
+//         access_key: app_access_key,
+//         type: 'management',
+//         version: 2,
+//         iat: Math.floor(Date.now() / 1000),
+//         nbf: Math.floor(Date.now() / 1000)
+//     },
+//     app_secret,
+//     {
+//         algorithm: 'HS256',
+//         expiresIn: '24h',
+//         jwtid: uuid.v4()
+//     },
+//     function (err, token) {
+//         console.log(token);
+//     }
+// );
 var meetRoutes = express_1.Router();
-meetRoutes.post('/createRoom', auth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var roomOptions, room, error_1;
+meetRoutes.post('/createRoom', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roomOptions, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 2, , 3]);
                 roomOptions = {
                     roomName: req.body.roomName,
                     roomDescription: req.body.roomDescription
                 };
-                return [4 /*yield*/, createRoom(roomOptions, res.get('_id'))];
+                return [4 /*yield*/, createRoom(roomOptions)];
             case 1:
-                room = _a.sent();
-                return [4 /*yield*/, roomModel_1.default(res.get('userName')).create(room)];
-            case 2:
                 _a.sent();
-                res.status(200).json({
-                    room: room
-                });
-                return [3 /*break*/, 4];
-            case 3:
+                console.log(express_1.response);
+                return [3 /*break*/, 3];
+            case 2:
                 error_1 = _a.sent();
                 console.log(error_1);
                 res.status(500).send(error_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
 meetRoutes.post('/getToken', function (req, res) {
-    var _a;
     try {
         // console.log(req.body);
         var payload = {
-            access_key: process.env.HMS_app_access_key,
+            access_key: process.env.app_access_key,
             room_id: req.body.room_id,
             user_id: req.body.user_id,
             role: req.body.role,
@@ -90,7 +100,7 @@ meetRoutes.post('/getToken', function (req, res) {
             iat: Math.floor(Date.now() / 1000),
             nbf: Math.floor(Date.now() / 1000)
         };
-        var token = jsonwebtoken_1.default.sign(payload, String((_a = process.env.HMS_APP_SECRET) === null || _a === void 0 ? void 0 : _a.replace('\'', '')), {
+        var token = jsonwebtoken_1.default.sign(payload, String(process.env.app_secret), {
             algorithm: 'HS256',
             expiresIn: '24h',
             jwtid: uuid_1.default.v4()
@@ -101,7 +111,7 @@ meetRoutes.post('/getToken', function (req, res) {
         console.log(error);
     }
 });
-function createRoom(roomOptions, creatorId) {
+function createRoom(roomOptions) {
     return __awaiter(this, void 0, void 0, function () {
         var authToken, response, error_2;
         return __generator(this, function (_a) {
@@ -109,26 +119,26 @@ function createRoom(roomOptions, creatorId) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     authToken = jsonwebtoken_1.default.sign({
-                        access_key: process.env.HMS_app_access_key,
+                        access_key: process.env.app_access_key,
                         type: 'management',
                         version: 2,
                         iat: Math.floor(Date.now() / 1000),
                         nbf: Math.floor(Date.now() / 1000)
-                    }, String(process.env.HMS_APP_SECRET), {
+                    }, String(process.env.app_secret), {
                         algorithm: 'HS256',
                         expiresIn: '24h',
                         jwtid: uuid_1.default.v4()
                     });
+                    console.log(authToken);
                     return [4 /*yield*/, axios_1.default.post(process.env.HMS_PROD_URL + '/rooms', {
                             "name": roomOptions.roomName,
                             "description": roomOptions.roomDescription,
-                            "template": "default_videoconf_0183f6a0-4cfc-4a52-a641-c732027ea04d",
                             "recording_info": {
-                                "enabled": false,
+                                "enabled": true,
                                 "upload_info": {
                                     "type": "s3",
-                                    "location": "100msrecordings-cruspo",
-                                    "prefix": creatorId,
+                                    "location": "test-bucket",
+                                    "prefix": "test-prefix",
                                     "options": {
                                         "region": "ap-south-1"
                                     },
@@ -146,10 +156,10 @@ function createRoom(roomOptions, creatorId) {
                         })];
                 case 1:
                     response = _a.sent();
-                    return [2 /*return*/, response.data];
+                    return [3 /*break*/, 3];
                 case 2:
                     error_2 = _a.sent();
-                    throw error_2;
+                    return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });

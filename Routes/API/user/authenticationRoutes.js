@@ -20,8 +20,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var gotopageController = __importStar(require("../../../controller/website/gotopageControllerAPI"));
-var websiteRouter = express_1.Router();
-websiteRouter.post('/recommend', gotopageController.newRecommendation);
-websiteRouter.post('/updateGoToPage', gotopageController.updateGoToPage);
-module.exports = websiteRouter;
+var authenticationController = __importStar(require("../../../controller/learnerController/auhthenticationController"));
+var authenticationRoutes = express_1.Router();
+authenticationRoutes.post('/login', authenticationController.login);
+authenticationRoutes.post('/signup', authenticationController.signup);
+module.exports = authenticationRoutes;

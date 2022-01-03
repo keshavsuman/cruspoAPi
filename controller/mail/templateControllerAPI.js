@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTemplate = exports.deleteTemplate = exports.createTemplate = void 0;
+exports.getMailTemplates = exports.updateTemplate = exports.deleteTemplate = exports.createTemplate = void 0;
 var mailTemplateModel_1 = __importDefault(require("../../models/mail/mailTemplateModel"));
 function createTemplate(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -52,16 +52,22 @@ function createTemplate(req, res) {
                             templateName: req.body.templateName,
                             subject: req.body.subject,
                             body: req.body.body,
-                            mailEvent: req.body.mailEvent,
                         })];
                 case 1:
                     template = _a.sent();
-                    res.status(201).send(template);
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Template created succesfully',
+                        data: template
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    res.status(500).send(error_1);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -79,12 +85,18 @@ function deleteTemplate(req, res) {
                     return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).findByIdAndDelete(req.params.templateId)];
                 case 1:
                     _a.sent();
-                    res.status(201).send();
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Template deleted succesfully',
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_2 = _a.sent();
                     console.log(error_2);
-                    res.status(500).send(error_2);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -103,22 +115,32 @@ function updateTemplate(req, res) {
                 case 1:
                     template = _a.sent();
                     if (!template) return [3 /*break*/, 3];
-                    template.set('templateName', req.body.templateName);
-                    template.set('subject', req.body.subject);
-                    template.set('body', req.body.body);
-                    return [4 /*yield*/, template.save()];
+                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.templateId, req.body)];
                 case 2:
                     _a.sent();
-                    res.status(201).send();
+                    // template.set('templateName',req.body.templateName);
+                    // template.set('subject',req.body.subject);
+                    // template.set('body',req.body.body);
+                    // await template.save();
+                    res.status(201).json({
+                        status: 200,
+                        message: 'Template updated succesfully',
+                    });
                     return [3 /*break*/, 4];
                 case 3:
-                    res.status(401).send('template not found');
+                    res.status(401).json({
+                        status: 401,
+                        message: 'Template not found',
+                    });
                     _a.label = 4;
                 case 4: return [3 /*break*/, 6];
                 case 5:
                     error_3 = _a.sent();
                     console.log(error_3);
-                    res.status(500).send(error_3);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
             }
@@ -126,3 +148,34 @@ function updateTemplate(req, res) {
     });
 }
 exports.updateTemplate = updateTemplate;
+function getMailTemplates(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, limit, skip, templates, error_4;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                case 1:
+                    templates = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Templates fetched succesfully',
+                        data: templates
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _b.sent();
+                    console.log(error_4);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getMailTemplates = getMailTemplates;

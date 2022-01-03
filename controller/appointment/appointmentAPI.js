@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAppointment = exports.updateAppointment = exports.createAppointments = exports.getBookedAppointments = exports.allAppointment = exports.getAppointment = void 0;
+exports.deleteAppointment = exports.updateAppointment = exports.createAppointments = exports.bookAppointment = exports.getBookedAppointments = exports.allAppointment = exports.getAppointment = void 0;
 var appointmentModel_1 = __importDefault(require("../../models/appointmentModel"));
 var appointmentsBookingModel_1 = __importDefault(require("../../models/appointmentsBookingModel"));
 function getAppointment(req, res) {
@@ -120,7 +120,7 @@ function getBookedAppointments(req, res) {
                                 },
                             }, {
                                 $lookup: {
-                                    'from': res.get('userName') + "_appointments",
+                                    'from': 'appointments',
                                     'localField': 'appointmentId',
                                     'foreignField': '_id',
                                     'as': 'appointmentData'
@@ -136,7 +136,8 @@ function getBookedAppointments(req, res) {
                                     'appointmetnData': 0,
                                     '__v': 0
                                 }
-                            }])];
+                            }
+                        ])];
                 case 1:
                     bookedAppointment = _a.sent();
                     res.status(200).send(bookedAppointment);
@@ -152,29 +153,42 @@ function getBookedAppointments(req, res) {
     });
 }
 exports.getBookedAppointments = getBookedAppointments;
-// export async function bookAppointment(req:Request,res:Response){
-//     try{
-//         var appointment = await appointmentsBookingModel(res.get('userName')).create({
-//             firstName:req.body.firstName,
-//             lastName:req.body.lastName,
-//             email:req.body.email,
-//             appointmentId:req.params.appointmentId,
-//             timings:{
-//                 startTime:req.body.timings.startTime,
-//                 endTime:req.body.timings.endTime 
-//             },
-//             bookedDate:req.body.bookedDate,
-//     });
-//     res.status(201).send('APPOINTMENT_BOOKED');
-//     }catch(error)
-//     {
-//         console.log(error);
-//         res.status(401).send(error);   
-//     }
-// }
-function createAppointments(req, res) {
+function bookAppointment(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var appointment, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
+                            firstName: req.body.firstName,
+                            lastName: req.body.lastName,
+                            email: req.body.email,
+                            appointmentId: req.params.appointmentId,
+                            timings: {
+                                startTime: req.body.timings.startTime,
+                                endTime: req.body.timings.endTime
+                            },
+                            bookedDate: req.body.bookedDate,
+                        })];
+                case 1:
+                    appointment = _a.sent();
+                    res.status(201).send('APPOINTMENT_BOOKED');
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.log(error_4);
+                    res.status(401).send(error_4);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.bookAppointment = bookAppointment;
+function createAppointments(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var appointment, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -196,9 +210,9 @@ function createAppointments(req, res) {
                     res.status(201).send('APPOINTMENT_CREATED');
                     return [3 /*break*/, 4];
                 case 3:
-                    error_4 = _a.sent();
-                    console.log(error_4);
-                    res.status(500).send(error_4);
+                    error_5 = _a.sent();
+                    console.log(error_5);
+                    res.status(500).send(error_5);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -209,7 +223,7 @@ exports.createAppointments = createAppointments;
 function updateAppointment(req, res) {
     var _a, _b, _c, _d, _e, _f;
     return __awaiter(this, void 0, void 0, function () {
-        var appointment, error_5;
+        var appointment, error_6;
         return __generator(this, function (_g) {
             switch (_g.label) {
                 case 0:
@@ -246,9 +260,9 @@ function updateAppointment(req, res) {
                     _g.label = 4;
                 case 4: return [3 /*break*/, 6];
                 case 5:
-                    error_5 = _g.sent();
-                    console.log(error_5);
-                    res.status(500).send(error_5);
+                    error_6 = _g.sent();
+                    console.log(error_6);
+                    res.status(500).send(error_6);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
             }
@@ -258,7 +272,7 @@ function updateAppointment(req, res) {
 exports.updateAppointment = updateAppointment;
 function deleteAppointment(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_6;
+        var error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -271,9 +285,9 @@ function deleteAppointment(req, res) {
                     res.status(201).send('APPOINTMENT_DELETED');
                     return [3 /*break*/, 3];
                 case 2:
-                    error_6 = _a.sent();
-                    console.log(error_6);
-                    res.status(400).send(error_6);
+                    error_7 = _a.sent();
+                    console.log(error_7);
+                    res.status(400).send(error_7);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

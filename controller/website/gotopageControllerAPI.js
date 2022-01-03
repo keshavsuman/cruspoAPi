@@ -40,7 +40,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateGoToPage = exports.newRecommendation = void 0;
-// import contactUsModel from "../../models/contactUsModel";
 var recommendModel_1 = __importDefault(require("../../models/recommendModel"));
 var axios_1 = __importDefault(require("axios"));
 function newRecommendation(req, res) {
@@ -68,20 +67,6 @@ function newRecommendation(req, res) {
     });
 }
 exports.newRecommendation = newRecommendation;
-// export async function contactUs(req:Request,res:Response){
-//     try {
-//         var contactus = new contactUsModel();
-//         contactus.firstName = req.body.firstName,
-//         contactus.lastName = req.body.lastName,
-//         contactus.email = req.body.email,
-//         contactus.contactNumber = req.body.contactNumber,
-//         contactus.queryMessage = req.body.message,
-//         res.status(201).send();
-//     } catch (error) {
-//         console.log(error);
-//         res.status(403).send(error);
-//     }
-// }
 function updateGoToPage(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var data, error_2;
@@ -106,7 +91,7 @@ function updateGoToPage(req, res) {
                 case 2:
                     error_2 = _a.sent();
                     console.log(error_2);
-                    res.status(403).send(error_2);
+                    res.status(500).send(error_2);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

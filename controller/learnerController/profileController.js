@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateProfle = exports.getProfile = void 0;
-var learnerModel_1 = __importDefault(require("../../models/manageMember/learnerModel"));
+var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
 function getProfile(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var learner, error_1;
@@ -48,7 +48,7 @@ function getProfile(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(res.locals.user.userId)];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(res.locals.user.userId)];
                 case 1:
                     learner = _a.sent();
                     res.status(200).send(learner);
@@ -72,7 +72,7 @@ function updateProfle(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     res.locals.user.userId;
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(res.locals.user.userId)];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(res.locals.user.userId)];
                 case 1:
                     learner = _a.sent();
                     return [3 /*break*/, 3];

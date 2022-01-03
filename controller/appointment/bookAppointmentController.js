@@ -42,36 +42,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.bookAppointment = void 0;
 var axios_1 = __importDefault(require("axios"));
 var appointmentsBookingModel_1 = __importDefault(require("../../models/appointmentsBookingModel"));
-var moment_1 = __importDefault(require("moment"));
 function bookAppointment(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var creator, date, error_1;
+        var creator, appointment, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
+                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/get', {
                             select: {
                                 domainNames: { $in: [req.body.domainName] }
                             },
                             project: {
-                                _id: 1,
-                                userName: 1
+                                _id: 1
                             }
                         })];
                 case 1:
                     creator = _a.sent();
-                    date = moment_1.default(req.body.bookedDate);
-                    return [4 /*yield*/, appointmentsBookingModel_1.default(creator.data.userName).create({
+                    console.log(creator.data);
+                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
                             appointmentId: req.body.appointmentId,
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
-                            bookedDate: date.add(1, 'days').toDate(),
+                            bookedDate: req.body.bookedDate,
                             timings: req.body.timings
                         })];
                 case 2:
-                    _a.sent();
+                    appointment = _a.sent();
                     res.status(201).send();
                     return [3 /*break*/, 4];
                 case 3:

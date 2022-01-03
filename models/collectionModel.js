@@ -4,25 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var collectionSchema = function (prefix) { return new mongoose_1.default.Schema({
-    collectionName: {
-        type: String,
-    },
-    collectionDescription: {
-        type: String,
-    },
-    collectionThumbnail: {
-        type: String,
-    },
-}); };
+var collectionSchema = new mongoose_1.default.Schema({});
 function collectionModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_collection");
+        model = mongoose_1.default.model(prefix + "_collections");
     }
-    catch (_a) {
-        model = mongoose_1.default.model(prefix + "_collection", collectionSchema(prefix));
+    catch (error) {
+        model = mongoose_1.default.model(prefix + "_collections", collectionSchema);
     }
-    return model;
 }
 exports.default = collectionModel;

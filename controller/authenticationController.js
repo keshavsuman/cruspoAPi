@@ -63,7 +63,7 @@ var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var axios_1 = __importDefault(require("axios"));
-var learnerModel_1 = __importDefault(require("../models/manageMember/learnerModel"));
+var subscriberModel_1 = __importDefault(require("../models/manageMember/subscriberModel"));
 var mailSender = __importStar(require("./mail/sendMailController"));
 var mongoose_1 = require("mongoose");
 dotenv_1.default.config();
@@ -242,7 +242,7 @@ function learnerSignup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 9, , 10]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).find({ email: req.body.email })];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).find({ email: req.body.email })];
                 case 1:
                     learner = _a.sent();
                     if (!(learner.length > 0)) return [3 /*break*/, 2];
@@ -264,7 +264,7 @@ function learnerSignup(req, res) {
                 case 5:
                     learnerRegistered = _a.sent();
                     if (!mongoose_1.Types.ObjectId.isValid(learnerRegistered.data)) return [3 /*break*/, 7];
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).create({
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
@@ -308,7 +308,7 @@ function learnerSignin(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).find({ email: req.body.email })];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).find({ email: req.body.email })];
                 case 1:
                     learner = _a.sent();
                     if (learner.length == 0) {

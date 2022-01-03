@@ -39,8 +39,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateMember = exports.signup = exports.login = void 0;
-var learnerModel_1 = __importDefault(require("../../models/manageMember/learnerModel"));
+exports.signup = exports.login = void 0;
+var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var axios_1 = __importDefault(require("axios"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -50,11 +50,10 @@ function login(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    if (!(req.body.email && req.body.password)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/get', {
+                    _a.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             select: {
-                                domainNames: { $in: [req.body.domainName] }
+                                domainNames: { $in: [req.headers.host] }
                             },
                             project: {
                                 _id: 1,
@@ -67,53 +66,61 @@ function login(req, res) {
                         })];
                 case 1:
                     response = _a.sent();
+                    console.log(response.data);
                     if (response.data.length == 0) {
-                        res.status(403).send({ message: 'User Not Found' });
+                        res.status(403).json({
+                            status: 404,
+                            message: 'User Not Found',
+                        });
                         return [2 /*return*/];
                     }
                     if (!(response.status == 200)) return [3 /*break*/, 3];
-                    return [4 /*yield*/, learnerModel_1.default(response.data.userName).find({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
+                    return [4 /*yield*/, subscriberModel_1.default(response.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
                 case 2:
                     learner = _a.sent();
-                    if (learner.length > 0) {
-                        if (!bcryptjs_1.default.compareSync(req.body.password, learner[0]['password'])) {
-                            res.send({
+                    if (learner) {
+                        if (!bcryptjs_1.default.compareSync(req.body.password, learner['password'])) {
+                            res.status(200).json({
                                 status: 200,
                                 message: "PASSWORD_INCORRECT",
-                                data: {}
+                                data: null
                             });
                             return [2 /*return*/];
                         }
                         token = jsonwebtoken_1.default.sign({
-                            firstName: learner[0].firstName,
-                            lastName: learner[0].lastName,
-                            email: learner[0].email,
-                            userType: 'creator'
-                        }, String(process.env.SECRET_KEY), {
+                            _id: learner._id,
+                            creatorDomains: response.data.domainNames,
+                            firstName: learner.firstName,
+                            lastName: learner.lastName,
+                            email: learner.email,
+                            userType: 'user'
+                        }, String('secret'), {
                             expiresIn: 60 * 60 * 24
                         });
-                        res.send({
+                        res.status(200).json({
                             status: 200,
                             message: "LOGIN_SUCCESSFULL",
                             data: {
                                 user: {
-                                    firstName: learner[0].firstName,
-                                    lastName: learner[0].lastName,
-                                    email: learner[0].email,
+                                    firstName: learner.firstName,
+                                    lastName: learner.lastName,
+                                    email: learner.email,
                                 },
                                 token: token
                             }
                         });
                     }
-                    return [3 /*break*/, 3];
-                case 3: return [3 /*break*/, 4];
-                case 4: return [3 /*break*/, 6];
-                case 5:
+                    _a.label = 3;
+                case 3: return [3 /*break*/, 5];
+                case 4:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    res.status(500).send(error_1);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    res.status(500).json({
+                        status: 500,
+                        message: error_1
+                    });
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -159,9 +166,9 @@ function signup(req, res) {
                 case 2:
                     response = _a.sent();
                     if (!(response.status === 200)) return [3 /*break*/, 3];
-                    res.status(403).send({ message: response.data.message });
+                    res.status(403).json({ message: response.data.message });
                     return [3 /*break*/, 5];
-                case 3: return [4 /*yield*/, learnerModel_1.default(response.data.creator.userName).create({
+                case 3: return [4 /*yield*/, subscriberModel_1.default(response.data.creator.userName).create({
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
                         email: req.body.email,
@@ -185,36 +192,3 @@ function signup(req, res) {
     });
 }
 exports.signup = signup;
-function updateMember(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    console.log(req.body);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('creatorId')).findByIdAndUpdate(res.get('_id'), {
-                            firstName: req.body.firstName,
-                            lastName: req.body.lastName,
-                            email: req.body.email,
-                            contactNumber: {
-                                countryCode: req.body.countryCode,
-                                mobileNumber: req.body.mobileNumber
-                            }
-                        })];
-                case 1:
-                    _a.sent();
-                    // Update at cruspo database    
-                    res.status(200).send('Updated');
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_3 = _a.sent();
-                    console.log(error_3);
-                    res.status(500).send();
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.updateMember = updateMember;

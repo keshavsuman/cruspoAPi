@@ -1,34 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -69,33 +39,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paidSubmit = exports.register = exports.downloadForm = exports.subscribe = exports.createForm = void 0;
-var downloadFormModel_1 = __importDefault(require("../models/downloadFormModel"));
-var subscribeModel_1 = __importDefault(require("../models/subscribeModel"));
-var mailSender = __importStar(require("./mail/sendMailController"));
-var cruspoFormSubmissionModel_1 = __importDefault(require("../models/forms/cruspoFormSubmissionModel"));
-var formModel_1 = __importDefault(require("../models/forms/formModel"));
-var axios_1 = __importDefault(require("axios"));
-var RazorpayController = __importStar(require("../controller/payment/razorpayController"));
-var jwt = __importStar(require("jsonwebtoken"));
-var paymentOrderModel_1 = __importDefault(require("../models/payment/paymentOrderModel"));
+exports.submitForm = exports.getSubmissions = exports.getForms = exports.updateForm = exports.createForm = void 0;
+var formModel_1 = __importDefault(require("../models/form/formModel"));
+var formSubmissionModel_1 = __importDefault(require("../models/form/formSubmissionModel"));
 function createForm(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var form, error_1;
+        var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    console.log(res.get('userName'));
-                    return [4 /*yield*/, formModel_1.default(res.get('userName')).create(__assign(__assign({}, req.body), { createdBy: res.get('_id') }))];
+                    return [4 /*yield*/, formModel_1.default(res.get('userName')).create({
+                            formName: req.body.formName,
+                            isPaid: req.body.isPaid,
+                        })];
                 case 1:
-                    form = _a.sent();
-                    res.status(200).json(form);
+                    _a.sent();
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Form created succesfully'
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    res.status(500).send(error_1);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -103,158 +74,106 @@ function createForm(req, res) {
     });
 }
 exports.createForm = createForm;
-function subscribe(req, res) {
+function updateForm(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, subscribeModel_1.default.create({
-                            'email': req.body.email,
-                        })];
+                    return [4 /*yield*/, formModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, req.body)];
                 case 1:
                     _a.sent();
-                    // console.log(res.get('userEmail'));
-                    // mailSender.sendFormSubmissionMailToCreator(res.get('userEmail'),'Subscribe Form',res.get('userEmail'),req.body);
-                    mailSender.sendSubscribeMail(req.body.email);
-                    res.redirect('https://' + req.query.redirect);
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Form updated succesfully'
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_2 = _a.sent();
-                    res.status(500).send(error_2);
+                    console.log(error_2);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     });
 }
-exports.subscribe = subscribe;
-function downloadForm(req, res) {
+exports.updateForm = updateForm;
+function getForms(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, select, project, limit, skip, forms, error_3;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, downloadFormModel_1.default.create({
-                            'email': req.body.email,
-                            'name': req.body.name
-                        })];
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, formModel_1.default(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
-                    _a.sent();
-                    // createOrder();
-                    mailSender.sendDownloadFormMail(req.body.email, req.body.name);
-                    res.redirect('https://' + req.query.redirect);
+                    forms = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Forms fetched succesfully',
+                        data: forms
+                    });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_3 = _a.sent();
-                    res.status(400).send(error_3);
+                    error_3 = _b.sent();
+                    console.log(error_3);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     });
 }
-exports.downloadForm = downloadForm;
-function register(req, res) {
+exports.getForms = getForms;
+function getSubmissions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, formData, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, limit, skip, formSubmissions, error_4;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { domainNames: { $in: [req.body.domainName] } },
-                            project: { email: 1, _id: 0, userName: 1, refreshToken: 1, firstName: 1, lastName: 1 }
-                        })];
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, formSubmissionModel_1.default(res.get('userName')).find({ formId: req.params.id }).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, (cruspoFormSubmissionModel_1.default(response.data.userName).create(req.body))];
+                    formSubmissions = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        data: formSubmissions,
+                        message: 'Form submissions fetched succesfully'
+                    });
+                    return [3 /*break*/, 3];
                 case 2:
-                    formData = _a.sent();
-                    formData.set('title', req.params.title);
-                    return [4 /*yield*/, formData.save()];
-                case 3:
-                    _a.sent();
-                    if (req.body.email) {
-                        mailSender.sendFormSubmissionMailToUser(req.params.title, req.body, response.data);
-                        mailSender.sendFormSubmissionMailToCreator(response.data.email, req.params.title, response.data.userName, req.body);
-                    }
-                    res.redirect(req.protocol + '://' + req.query.redirect);
-                    return [3 /*break*/, 5];
-                case 4:
-                    e_1 = _a.sent();
-                    res.status(500).send(e_1);
-                    console.log(e_1);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.register = register;
-function paidSubmit(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response, form, formData, paymentOrder, order, error_4;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 12, , 13]);
-                    console.log(req.headers.host);
-                    return [4 /*yield*/, axios_1.default.post(String(process.env.authenticationURL) + '/creator/getCreatorDetails', {
-                            select: { domainNames: { $in: [req.headers.host] } },
-                            project: { email: 1, _id: 0, userName: 1, refreshToken: 1, firstName: 1, lastName: 1, razorpayDetails: 1 }
-                        })];
-                case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, formModel_1.default(response.data.userName).findById(req.params.formId)];
-                case 2:
-                    form = _a.sent();
-                    if (!form) return [3 /*break*/, 10];
-                    return [4 /*yield*/, (cruspoFormSubmissionModel_1.default(response.data.userName).create(req.body))];
-                case 3:
-                    formData = _a.sent();
-                    formData.set('title', req.params.title);
-                    if (!form.isPaid) return [3 /*break*/, 7];
-                    formData.set('paymentStatus', false);
-                    return [4 /*yield*/, formData.save()];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, paymentOrderModel_1.default(response.data.userName).findById(form.paymentOrderId)];
-                case 5:
-                    paymentOrder = _a.sent();
-                    return [4 /*yield*/, RazorpayController.createOrder(response.data, paymentOrder.paymentOrderAmount, 'INR', response.data.razorpayDetails.access_token, 'FORM')];
-                case 6:
-                    order = _a.sent();
-                    if (order) {
-                        res.redirect("https://" + req.headers.host + "/payment/collectPayment?order_id=" + order.paymentLog._id);
-                    }
-                    return [3 /*break*/, 9];
-                case 7: return [4 /*yield*/, formData.save()];
-                case 8:
-                    _a.sent();
-                    mailSender.sendFormSubmissionMailToUser(req.params.title, req.body, response.data);
-                    mailSender.sendFormSubmissionMailToCreator(response.data.email, req.params.title, response.data.userName, req.body);
-                    res.redirect(form.redirectUrl);
-                    _a.label = 9;
-                case 9: return [3 /*break*/, 11];
-                case 10:
-                    res.status(404).send('Form not found');
-                    _a.label = 11;
-                case 11: return [3 /*break*/, 13];
-                case 12:
-                    error_4 = _a.sent();
+                    error_4 = _b.sent();
                     console.log(error_4);
-                    res.status(500).send(error_4);
-                    return [3 /*break*/, 13];
-                case 13: return [2 /*return*/];
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
-exports.paidSubmit = paidSubmit;
-function decryptToken(token) {
-    var decoded = jwt.decode(token);
-    return decoded;
+exports.getSubmissions = getSubmissions;
+function submitForm(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            try {
+            }
+            catch (error) {
+            }
+            return [2 /*return*/];
+        });
+    });
 }
+exports.submitForm = submitForm;

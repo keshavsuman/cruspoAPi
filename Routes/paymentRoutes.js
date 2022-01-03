@@ -1,28 +1,32 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var RazorPayController = __importStar(require("../controller/payment/razorpayController"));
+// import * as RazorPayController from '../controller/payment/razorpayController';
 var paymentRouter = express_1.Router();
-paymentRouter.post('/pay', RazorPayController.pay);
-paymentRouter.post('/verifySignature', RazorPayController.verifySignature);
-paymentRouter.get('/collectPayment', RazorPayController.collectPayment);
+// paymentRouter.get('/coursePayment/1999',async (req,res)=>{
+//     var priceInSmallestUnit = 1999 * 100;
+//         var metaData = new Map<String,any>();
+//         metaData.set('paymentFor','Course');
+//         var kes:any = await RazorPayController.createOrder(
+//             priceInSmallestUnit,
+//             'INR',
+//             'MISCELLANEOUS',
+//             // metaData,
+//             );
+//             var callbackURL = 'https://sapnashah.in/payment/razorpay/verifyPayment';
+//         res.render('payment',{
+//             key : process.env.KEYID,
+//             amount:priceInSmallestUnit,
+//             currency:'INR',
+//             name:'',
+//             description:'Exclusive 5 days communication workshop',
+//             image:"",
+//             orderId:kes.id,
+//             prefillName:"",
+//             prefillEmail:"",
+//             prefillContact:"",
+//             callbackURL:callbackURL
+//         });
+// });
+// paymentRouter.post('/razorpay/verifyPayment',RazorPayController.verifySignature);
 module.exports = paymentRouter;

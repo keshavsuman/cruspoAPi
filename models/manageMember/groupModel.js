@@ -10,6 +10,10 @@ exports.groupSchema = new mongoose_1.default.Schema({
         type: String,
         unique: true
     },
+    status: {
+        type: String,
+        enum: ["ACTIVE", 'DELETED']
+    }
 }, {
     timestamps: true
 });

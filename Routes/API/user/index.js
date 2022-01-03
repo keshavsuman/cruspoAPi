@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var authenticationRoutes = require("./authenticationRoutes");
+var programRoutes = require("./programRoutes");
+var liveSessionsRoutes = require('./liveSessionsRoutes');
+var contentRoutes = require('./contentRoutes');
+var learnerRouter = express_1.Router();
+learnerRouter.use('/auth', authenticationRoutes);
+learnerRouter.use('/program', programRoutes);
+learnerRouter.use('/content', contentRoutes);
+learnerRouter.use('/liveSessions', liveSessionsRoutes);
+module.exports = learnerRouter;

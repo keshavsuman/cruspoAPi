@@ -60,11 +60,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProgramById = exports.getPrograms = exports.getPurchasedProgram = exports.lesson = exports.programs = exports.programPage = exports.dashboard = void 0;
 var programModel_1 = __importDefault(require("../../models/programModel"));
-// import * as razorpayController from '../payment/razorpayController';
 var jsonwebtoken = __importStar(require("jsonwebtoken"));
 var authenticationController = __importStar(require("../authenticationController"));
-var learnerModel_1 = __importDefault(require("../../models/manageMember/learnerModel"));
-var lessonModel_1 = __importDefault(require("../../models/lessonModel"));
+var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
 var mongoose_1 = __importDefault(require("mongoose"));
 function dashboard(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -74,7 +72,7 @@ function dashboard(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     learner = jsonwebtoken.verify(req.cookies.authLearnerToken, String(process.env.userId));
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(learner.learnerId).populate('programsPurchased')];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(learner.learnerId).populate('programsPurchased')];
                 case 1:
                     learnerDocument = _a.sent();
                     res.render('learn/learner-dashboard', {
@@ -145,7 +143,7 @@ function programs(req, res) {
                 case 1:
                     programs = _a.sent();
                     learner = jsonwebtoken.verify(req.cookies.authLearnerToken, String(process.env.userId));
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(learner.learnerId).populate('programsPurchased')];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(learner.learnerId).populate('programsPurchased')];
                 case 2:
                     learnerprograms = _a.sent();
                     res.render('learn/learner-programs', {
@@ -195,20 +193,17 @@ exports.programs = programs;
 // }
 function lesson(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var learner, purchasedprograms, lesson, program;
+        var learner, purchasedprograms, program;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     learner = jsonwebtoken.verify(req.cookies.authLearnerToken, String(process.env.userId));
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(learner.learnerId).select('programsPurchased')];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(learner.learnerId).select('programsPurchased')];
                 case 1:
                     purchasedprograms = _a.sent();
                     console.log(purchasedprograms);
                     console.log(typeof req.params.programId);
-                    if (!(purchasedprograms === null || purchasedprograms === void 0 ? void 0 : purchasedprograms.programsPurchased.includes(new mongoose_1.default.Types.ObjectId(req.params.programId)))) return [3 /*break*/, 4];
-                    return [4 /*yield*/, lessonModel_1.default(res.get('userName')).findById(req.params.lessonId)];
-                case 2:
-                    lesson = _a.sent();
+                    if (!(purchasedprograms === null || purchasedprograms === void 0 ? void 0 : purchasedprograms.programsPurchased.includes(new mongoose_1.default.Types.ObjectId(req.params.programId)))) return [3 /*break*/, 3];
                     return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.programId).populate({
                             path: 'modules',
                             populate: {
@@ -216,17 +211,17 @@ function lesson(req, res) {
                                 model: 'lesson'
                             }
                         })];
-                case 3:
+                case 2:
                     program = _a.sent();
                     res.render('learn/video-lesson', {
                         lesson: lesson,
                         program: program
                     });
-                    return [3 /*break*/, 5];
-                case 4:
+                    return [3 /*break*/, 4];
+                case 3:
                     res.redirect('/learn/purchaseprogram/' + req.params.programId);
-                    _a.label = 5;
-                case 5: return [2 /*return*/];
+                    _a.label = 4;
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -240,7 +235,7 @@ function getPurchasedProgram(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(res.locals.get('user').userId, { programsPurchased: 1 }).populate('programsPurchased')];
+                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(res.locals.get('user').userId, { programsPurchased: 1 }).populate('programsPurchased')];
                 case 1:
                     programsPurchased = _a.sent();
                     res.status(200).send(programsPurchased);

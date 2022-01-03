@@ -63,7 +63,7 @@ var authenticationController = require('../controller/authenticationController')
 var learnAuthMiddleware_1 = require("../middlewares/learnAuthMiddleware");
 var programController = __importStar(require("../controller/learnerController/programController"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var learnerModel_1 = __importDefault(require("../models/manageMember/learnerModel"));
+var subscriberModel_1 = __importDefault(require("../models/manageMember/subscriberModel"));
 var learn = express.Router();
 learn.get('/authentication', function (req, res) {
     res.render('learn/sign-up', { error: '', mode: 'login' });
@@ -71,7 +71,7 @@ learn.get('/authentication', function (req, res) {
 learn.post('/signup', authenticationController.learnerSignup);
 learn.post('/signin', authenticationController.learnerSignin);
 learn.get('/forgetPassword', authenticationController.learnerForgetPassword);
-learn.use(learnAuthMiddleware_1.learnAuth);
+learn.use(learnAuthMiddleware_1.auth);
 learn.get('/', programController.dashboard);
 learn.get('/programs', programController.programs);
 learn.get('/program/:programId', programController.programPage);
@@ -83,7 +83,7 @@ learn.get('/account', function (req, res) { return __awaiter(void 0, void 0, voi
         switch (_a.label) {
             case 0:
                 user = jsonwebtoken_1.default.verify(req.cookies.authLearnerToken, String(process.env.userId));
-                return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(user.learnerId)];
+                return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(user.learnerId)];
             case 1:
                 newuser = _a.sent();
                 res.render('learn/settings', {

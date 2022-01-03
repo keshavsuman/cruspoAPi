@@ -8,7 +8,6 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
 var cors_1 = __importDefault(require("cors"));
-var goToPageRoutes = require('./Routes/gotopageRoutes');
 var paymentRoutes = require('./Routes/paymentRoutes');
 var bookAppointmentRoutes = require('./Routes/bookAppointmentRoutes');
 var formRoutes = require('./Routes/formRoutes');
@@ -36,10 +35,9 @@ app.use(express_1.default.urlencoded({
     extended: true
 }));
 app.use('/api', apiRoutes);
-app.use('/goToPage', goToPageRoutes);
 app.use('/form', formRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/bookAppointment', bookAppointmentRoutes);
 app.listen(5000, function () {
-    console.log("Server is running in port " + process.env.PORT);
+    console.log("Server is running in port 5000");
 });

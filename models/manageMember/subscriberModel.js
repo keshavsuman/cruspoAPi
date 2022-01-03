@@ -50,6 +50,7 @@ var learnerSchema = new mongoose_1.default.Schema({
     },
     status: {
         type: String,
+        default: "ACTIVE",
         enum: ['ACTIVE', 'DEACTIVE', 'DELETED']
     }
 }, {

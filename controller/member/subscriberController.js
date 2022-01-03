@@ -74,15 +74,15 @@ var groupModel_1 = __importDefault(require("../../models/manageMember/groupModel
 var subscriberModel_1 = __importStar(require("../../models/manageMember/subscriberModel"));
 function getSubscribers(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, sort, limit, learners, error_1;
+        var _a, select, project, sort, limit, skip, learners, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    _a = req.body, select = _a.select, project = _a.project, sort = _a.sort, limit = _a.limit;
+                    _a = req.body, select = _a.select, project = _a.project, sort = _a.sort, limit = _a.limit, skip = _a.skip;
                     return [4 /*yield*/, subscriberModel_1.default(res.get('userName'))
                             .find(__assign(__assign({}, select), { status: { $in: ['ACTIVE', 'DEACTIVE'] } }), project).sort(sort !== null && sort !== void 0 ? sort : {})
-                            .limit(limit)];
+                            .limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     learners = _b.sent();
                     res.status(200).json({

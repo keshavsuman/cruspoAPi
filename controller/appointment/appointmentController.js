@@ -39,260 +39,338 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadAppointmentThumbnail = exports.bookAppointment = exports.deleteAppointment = exports.unpublishAppointment = exports.saveAndPublishAppointment = exports.saveAppointment = exports.insertAppointment = exports.getEditAppointment = exports.getAppointments = void 0;
+exports.deleteAppointment = exports.updateAppointment = exports.createAppointments = exports.bookAppointment = exports.getUpcomingAppointmentBookings = exports.getPastAppointmentBookings = exports.getAppointments = exports.getAppointmentById = void 0;
 var appointmentModel_1 = __importDefault(require("../../models/appointmentModel"));
-var razorpay_1 = __importDefault(require("razorpay"));
-var imageUploadCotroller_1 = require("../imageUploadCotroller");
-var currencyModel_1 = __importDefault(require("../../models/currencyModel"));
-var notificationModel_1 = __importDefault(require("../../models/notificationModel"));
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var appointmentsBookingModel_1 = __importDefault(require("../../models/appointmentsBookingModel"));
-function getAppointments(req, res) {
+function getAppointmentById(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var currency, notifications, appointmentsBooking, data, e_1;
+        var appointment, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, currencyModel_1.default.find()];
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findById(req.params.id).populate('currency')];
                 case 1:
-                    currency = _a.sent();
-                    return [4 /*yield*/, notificationModel_1.default.find().limit(10)];
+                    appointment = _a.sent();
+                    if (appointment) {
+                        res.status(200).send(appointment);
+                    }
+                    else {
+                        res.status(404).send({ message: "Appointment Not Found" });
+                    }
+                    return [3 /*break*/, 3];
                 case 2:
-                    notifications = _a.sent();
-                    ;
-                    return [4 /*yield*/, appointmentsBookingModel_1.default.find({})];
-                case 3:
-                    appointmentsBooking = _a.sent();
-                    return [4 /*yield*/, appointmentModel_1.default.find().limit(50)];
-                case 4:
-                    data = _a.sent();
-                    res.render('admin/appointments.ejs', {
-                        appointments: data,
-                        currencies: currency,
-                        notifications: notifications,
-                        // user:user,
-                        appointmentsBooking: appointmentsBooking
+                    error_1 = _a.sent();
+                    console.log(error_1);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_1,
+                        data: null
                     });
-                    return [3 /*break*/, 6];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getAppointmentById = getAppointmentById;
+function getAppointments(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, skip, limit, appointments, error_2;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a[0], project = _a[1], skip = _a[2], limit = _a[3];
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                case 1:
+                    appointments = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Appointments fetched Succesfully",
+                        data: appointments
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_2 = _b.sent();
+                    console.log(error_2);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_2,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getAppointments = getAppointments;
+function getPastAppointmentBookings(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var bookedAppointments, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).aggregate([{
+                                $match: {
+                                    $expr: {
+                                        $lte: ['$bookedDate', new Date(Date.now())]
+                                    }
+                                },
+                            }, {
+                                $lookup: {
+                                    'from': res.get('userName') + "_appointments",
+                                    'localField': 'appointmentId',
+                                    'foreignField': '_id',
+                                    'as': 'appointmentData'
+                                },
+                            }, {
+                                '$addFields': {
+                                    'appointment': {
+                                        '$first': '$appointmentData'
+                                    }
+                                },
+                            }, {
+                                '$project': {
+                                    'appointmetnData': 0,
+                                    '__v': 0
+                                }
+                            }])];
+                case 1:
+                    bookedAppointments = _a.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Past Booked Appointments fetched successfully",
+                        data: bookedAppointments
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _a.sent();
+                    console.log(error_3);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_3,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getPastAppointmentBookings = getPastAppointmentBookings;
+function getUpcomingAppointmentBookings(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var bookedAppointments, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).aggregate([{
+                                $match: {
+                                    $expr: {
+                                        $gte: ['$bookedDate', new Date(Date.now())]
+                                    }
+                                },
+                            }, {
+                                $lookup: {
+                                    'from': res.get('userName') + "_appointments",
+                                    'localField': 'appointmentId',
+                                    'foreignField': '_id',
+                                    'as': 'appointmentData'
+                                },
+                            }, {
+                                '$addFields': {
+                                    'appointment': {
+                                        '$first': '$appointmentData'
+                                    }
+                                },
+                            }, {
+                                '$project': {
+                                    'appointmetnData': 0,
+                                    '__v': 0
+                                }
+                            }])];
+                case 1:
+                    bookedAppointments = _a.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Upcoming Booked Appointments fetched successfully",
+                        data: bookedAppointments
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.log(error_4);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_4,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getUpcomingAppointmentBookings = getUpcomingAppointmentBookings;
+function bookAppointment(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var appointment, error_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
+                            firstName: req.body.firstName,
+                            lastName: req.body.lastName,
+                            email: req.body.email,
+                            appointmentId: req.params.appointmentId,
+                            timings: {
+                                startTime: req.body.timings.startTime,
+                                endTime: req.body.timings.endTime
+                            },
+                            bookedDate: req.body.bookedDate,
+                        })];
+                case 1:
+                    appointment = _a.sent();
+                    res.status(201).json({
+                        status: 201,
+                        message: 'APPOINTMENT_BOOKED',
+                        data: appointment
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_5 = _a.sent();
+                    console.log(error_5);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_5,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.bookAppointment = bookAppointment;
+function createAppointments(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var appointment, error_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).create({
+                            'status': 'DRAFT',
+                            'appointmentTitle': req.body.appointmentTitle,
+                            'appointmentThumbnail': req.body.appointmentThumbnail,
+                            'appointmentDescription': req.body.appointmentDescription,
+                            'appointmentPrice': req.body.appointmentPrice,
+                            'currency': req.body.currency,
+                            'isPaid': req.body.isPaid
+                        })];
+                case 1:
+                    appointment = _a.sent();
+                    return [4 /*yield*/, appointment.save()];
+                case 2:
+                    _a.sent();
+                    res.status(201).send({
+                        status: 201,
+                        message: 'APPOINTMENT_CREATED',
+                        data: null
+                    });
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_6 = _a.sent();
+                    console.log(error_6);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_6,
+                        data: null
+                    });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.createAppointments = createAppointments;
+function updateAppointment(req, res) {
+    var _a, _b, _c, _d, _e, _f;
+    return __awaiter(this, void 0, void 0, function () {
+        var appointment, error_7;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0:
+                    _g.trys.push([0, 5, , 6]);
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findById(req.body.appointmentId)];
+                case 1:
+                    appointment = _g.sent();
+                    if (!appointment) return [3 /*break*/, 3];
+                    appointment.appointmentTitle = req.body.appointmentTitle;
+                    appointment.appointmentDescription = req.body.appointmentDescription;
+                    appointment.appointmentThumbnail = (_a = req.body.appointmentThumbnail) !== null && _a !== void 0 ? _a : appointment.appointmentThumbnail;
+                    appointment.currency = (_b = req.body.currency) !== null && _b !== void 0 ? _b : appointment.currency;
+                    appointment.appointmentPrice = (_c = req.body.appointmentPrice) !== null && _c !== void 0 ? _c : appointment.appointmentPrice;
+                    appointment.status = (_d = req.body.status) !== null && _d !== void 0 ? _d : appointment.status;
+                    appointment.timezone = (_e = req.body.timezone) !== null && _e !== void 0 ? _e : appointment.timezone;
+                    appointment.duration = (_f = req.body.duration) !== null && _f !== void 0 ? _f : appointment.duration;
+                    appointment.schedule = req.body.schedule;
+                    if (req.body.mode == 'save') {
+                        appointment.status = 'DRAFT';
+                    }
+                    if (req.body.mode == 'save-and-publish') {
+                        appointment.status = 'PUBLISHED';
+                    }
+                    if (req.body.mode == 'unpublish') {
+                        appointment.status = 'UNPUBLISHED';
+                    }
+                    return [4 /*yield*/, appointment.save()];
+                case 2:
+                    _g.sent();
+                    res.status(200).send('APPOINTMENT_UPDATED');
+                    return [3 /*break*/, 4];
+                case 3:
+                    res.status(500).send("Appointment with this Id doesn't exists");
+                    _g.label = 4;
+                case 4: return [3 /*break*/, 6];
                 case 5:
-                    e_1 = _a.sent();
-                    console.log(e_1);
+                    error_7 = _g.sent();
+                    console.log(error_7);
+                    res.status(500).send(error_7);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
             }
         });
     });
 }
-exports.getAppointments = getAppointments;
-function getEditAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var currency, notifications, appointment;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, currencyModel_1.default.find()];
-                case 1:
-                    currency = _a.sent();
-                    return [4 /*yield*/, notificationModel_1.default.find().limit(10)];
-                case 2:
-                    notifications = _a.sent();
-                    return [4 /*yield*/, appointmentModel_1.default.findById(req.params.appointmentID)];
-                case 3:
-                    appointment = _a.sent();
-                    res.render('admin/edit-appointment.ejs', {
-                        currencies: currency,
-                        appointment: appointment,
-                        notifications: notifications
-                    });
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.getEditAppointment = getEditAppointment;
-function insertAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var user, data, e_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    user = jsonwebtoken_1.default.verify(req.cookies.authToken, String(process.env.userId));
-                    return [4 /*yield*/, appointmentModel_1.default.create({
-                            appointmentTitle: req.body.appointmentTitle,
-                            appointmentDescription: req.body.appointmentDescription,
-                            appointmentCreatorId: user.creatorId,
-                            appointmentThumbnail: req.file.location,
-                            currency: JSON.parse(req.body.currency),
-                            appointmentPrice: req.body.appointmentPrice,
-                            status: 'DRAFT'
-                        })];
-                case 1:
-                    data = _a.sent();
-                    res.redirect('/admin/appointment/edit/' + data['_id']);
-                    return [3 /*break*/, 3];
-                case 2:
-                    e_2 = _a.sent();
-                    console.log(e_2);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.insertAppointment = insertAppointment;
-;
-function saveAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userData, duration, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    userData = jsonwebtoken_1.default.verify(req.cookies.authToken, String(process.env.userId));
-                    duration = {
-                        hours: req.body.hoursValue,
-                        minutes: req.body.minsValue
-                    };
-                    return [4 /*yield*/, appointmentModel_1.default.findByIdAndUpdate(req.body.appointmentId, {
-                            appointmentTitle: req.body.appointmentTitle,
-                            appointmentCreatorId: userData.creatorId,
-                            appointmentDescription: req.body.appointmentDescription,
-                            appointmentThumbnail: req.body.appointmentThumbnail,
-                            currency: JSON.parse(req.body.currency),
-                            appointmentPrice: req.body.appointmentPrice,
-                            // duration:duration,
-                            timeZone: req.body.timeZone,
-                            status: 'DRAFT'
-                        })];
-                case 1:
-                    _a.sent();
-                    res.status(200).send('SAVED');
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    res.status(400).send(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.saveAppointment = saveAppointment;
-;
-function saveAndPublishAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userData, duration, error_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    userData = jsonwebtoken_1.default.verify(req.cookies.authToken, String(process.env.userId));
-                    duration = {
-                        hours: req.body.hoursValue,
-                        minutes: req.body.minsValue
-                    };
-                    return [4 /*yield*/, appointmentModel_1.default.findByIdAndUpdate(req.body.appointmentId, {
-                            appointmentTitle: req.body.appointmentTitle,
-                            appointmentCreatorId: userData.creatorId,
-                            appointmentDescription: req.body.appointmentDescription,
-                            appointmentThumbnail: req.body.appointmentThumbnail,
-                            currency: JSON.parse(req.body.currency),
-                            appointmentPrice: req.body.appointmentPrice,
-                            // duration:duration,
-                            timeZone: req.body.timeZone,
-                            status: 'PUBLISHED'
-                        })];
-                case 1:
-                    _a.sent();
-                    res.status(200).send("PUBLISHED");
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_2 = _a.sent();
-                    console.log(error_2);
-                    res.status(500).send(error_2);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.saveAndPublishAppointment = saveAndPublishAppointment;
-;
-function unpublishAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, appointmentModel_1.default.findByIdAndUpdate(req.body.appointmentId, {
-                            status: 'UNPUBLISHED'
-                        })];
-                case 1:
-                    _a.sent();
-                    res.status(200).send('UNPUBLISHED');
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_3 = _a.sent();
-                    console.log(error_3);
-                    res.status(500).send(error_3);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.unpublishAppointment = unpublishAppointment;
-;
+exports.updateAppointment = updateAppointment;
 function deleteAppointment(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var error_8;
         return __generator(this, function (_a) {
-            try {
-                appointmentModel_1.default.findByIdAndDelete(req.body.appointmentId);
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                            'status': 'DELETED'
+                        })];
+                case 1:
+                    _a.sent();
+                    res.status(201).send('APPOINTMENT_DELETED');
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_8 = _a.sent();
+                    console.log(error_8);
+                    res.status(400).send(error_8);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (error) {
-                console.log(error);
-            }
-            return [2 /*return*/];
         });
     });
 }
 exports.deleteAppointment = deleteAppointment;
-;
-function bookAppointment(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var instance, options;
-        return __generator(this, function (_a) {
-            try {
-                instance = new razorpay_1.default({ key_id: process.env.KEYID, key_secret: process.env.KEYSECRET });
-                options = {
-                    amount: 50000,
-                    currency: "INR",
-                    receipt: "order_rcptid_11"
-                };
-                //   instance.orders.create(options, function(err, order) {
-                //     console.log(order);
-                //   });
-                //   sendAppointmentMail()
-            }
-            catch (error) {
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-exports.bookAppointment = bookAppointment;
-function uploadAppointmentThumbnail(req, res, next) {
-    var upload = imageUploadCotroller_1.multerUpload.single('appointmentThumbnail');
-    upload(req, res, function (err) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log('image uploaded');
-            next();
-        }
-    });
-}
-exports.uploadAppointmentThumbnail = uploadAppointmentThumbnail;

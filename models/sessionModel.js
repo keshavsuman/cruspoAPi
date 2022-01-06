@@ -47,8 +47,8 @@ exports.sessionSchema = new mongoose_1.default.Schema({
     },
     status: {
         type: String,
-        enum: ['ACTIVE', 'DELETED'],
-        default: 'ACTIVE'
+        enum: ['PUBLISHED', 'UNPUBLISHED', 'DRAFT'],
+        default: 'DRAFT'
     },
 }, { timestamps: true });
 function sessionModel(prefix) {

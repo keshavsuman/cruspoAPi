@@ -20,8 +20,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var programController = __importStar(require("../../../controller/program/programControllerAPI"));
+var programController = __importStar(require("../../../controller/program/programController"));
 var programRoutes = express_1.Router();
+programRoutes.get('/getProgramById/:id', programController.getProgramById);
 programRoutes.post('/getPrograms', programController.getPrograms);
 programRoutes.post('/createProgram', programController.createProgram);
 programRoutes.post('/updateProgram/:programId', programController.updatedprogram);

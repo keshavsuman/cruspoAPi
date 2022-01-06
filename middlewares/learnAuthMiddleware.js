@@ -41,30 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// export function learnAuth(req:Request,res:Response,next:NextFunction){
-//     try{
-//         if(req.headers.authorization)
-//         {
-//             jsonwebtoken.verify(req.headers.authorization.split(' ').pop(),'secret',(err:Error,decodedToken:jsonwebtokenInterface)=>{
-//                 if(err){
-//                     console.log(err.message);
-//                     res.status(406).send({message:'Authorization Token not acceptable'});
-//                 }else{
-//                     res.set('userName',decodedToken.userName);
-//                     res.set('userEmail',decodedToken.email);
-//                     res.set('_id',decodedToken.creatorId);
-//                     next();
-//                 } 
-//             });
-//         }
-//     }catch(error)
-//     {
-//         res.status(500).json({
-//             status:500,
-//             error:error
-//         });
-//     }
-// };
 function auth(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var token, user;
@@ -73,13 +49,14 @@ function auth(req, res, next) {
                 if (req.headers.authorization) {
                     token = req.headers.authorization.split(" ")[1];
                     user = jsonwebtoken_1.default.verify(token, 'secret');
-                    // res.set('userName',user.userName);
-                    // res.set('userEmail',user.email);
-                    // res.set('_id',user._id);
+                    res.set('userName', user.creator);
+                    res.set('userEmail', user.email);
+                    res.set('_id', user._id);
                     next();
                 }
             }
             catch (error) {
+                console.log(error);
                 res.status(500).json({
                     status: 500,
                     error: error

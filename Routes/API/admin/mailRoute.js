@@ -26,7 +26,7 @@ var express_1 = __importDefault(require("express"));
 var mailSendController = __importStar(require("../../../controller/mail/sendMailController"));
 var mailTemplateController = __importStar(require("../../../controller/mail/templateControllerAPI"));
 var mailRoutes = express_1.default();
-mailRoutes.post('/sendLearnerJoinMail', mailSendController.sendLearnerRegisterMailToCreator);
+mailRoutes.post('/sendLearnerJoinMail', mailSendController.sendUserRegisterMailToCreator);
 mailRoutes.get('/sendRemainderMail', mailSendController.sendRemainderMail);
 mailRoutes.post('/sendRemainderMailTest', mailSendController.sendRemainderMailTest);
 mailRoutes.post('/sendMailToFormResponse', mailSendController.sendMailToFormResponse);

@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.learnerStatus = void 0;
+exports.userStatus = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-var learnerSchema = new mongoose_1.default.Schema({
+var userSchema = function (prefix) { return new mongoose_1.default.Schema({
     firstName: {
         type: String,
         trim: true
@@ -28,17 +28,17 @@ var learnerSchema = new mongoose_1.default.Schema({
         // required:true   
     },
     programsPurchased: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "program" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_program" }]
     },
     batchesJoined: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "batch" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_batch" }]
     },
-    // learnerRefId:{
+    // userRefId:{
     //     type:mongoose.Schema.Types.ObjectId,
     //     required:true
     // },
     groupsJoined: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "group" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_group" }]
     },
     contactDetails: {
         type: {
@@ -55,14 +55,21 @@ var learnerSchema = new mongoose_1.default.Schema({
     }
 }, {
     timestamps: true
-});
-var learnerStatus;
-(function (learnerStatus) {
-    learnerStatus["ACTIVE"] = "ACTIVE";
-    learnerStatus["DEACTIVE"] = "DEACTIVE";
-    learnerStatus["DELETED"] = "DELETED";
-})(learnerStatus = exports.learnerStatus || (exports.learnerStatus = {}));
+}); };
+var userStatus;
+(function (userStatus) {
+    userStatus["ACTIVE"] = "ACTIVE";
+    userStatus["DEACTIVE"] = "DEACTIVE";
+    userStatus["DELETED"] = "DELETED";
+})(userStatus = exports.userStatus || (exports.userStatus = {}));
 function subscriberModel(prefix) {
-    return mongoose_1.default.model(prefix + "_subscriber", learnerSchema);
+    var model;
+    try {
+        model = mongoose_1.default.model(prefix + "_subscriber");
+    }
+    catch (err) {
+        model = mongoose_1.default.model(prefix + "_subscriber", userSchema(prefix));
+    }
+    return model;
 }
 exports.default = subscriberModel;

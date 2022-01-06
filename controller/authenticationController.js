@@ -418,7 +418,7 @@ function learnerForgetPassword(req, res) {
                                 expiresIn: 60 * 60
                             });
                             link = req.protocol + '://' + req.hostname + '/authentication/resetpassword/' + token;
-                            mailSender.sendResetPasswordMailToLearner(req.body.email, link);
+                            mailSender.sendResetPasswordMailToUser(req.body.email, link);
                             res.redirect('/authentication/resetPassword');
                         }
                     }

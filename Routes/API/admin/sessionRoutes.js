@@ -20,12 +20,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var sessionControllerAPI = __importStar(require("../../../controller/session/sessionControllerAPI"));
+var sessionController = __importStar(require("../../../controller/session/sessionController"));
 var sessionRoutes = express_1.Router();
-sessionRoutes.get('/getSessions/:type', sessionControllerAPI.getSessions);
-sessionRoutes.get('/getSessionById', sessionControllerAPI.getSessionById);
-sessionRoutes.post('/createSession', sessionControllerAPI.createSession);
-sessionRoutes.patch('/updateSession/:sessionId', sessionControllerAPI.updateSession);
-sessionRoutes.delete('/deleteSession/:sessionId', sessionControllerAPI.deleteSession);
-// sessionRoutes.get('/upcomming')
+sessionRoutes.post('/getSessions', sessionController.getSessions);
+sessionRoutes.get('/getSessionById', sessionController.getSessionById);
+sessionRoutes.post('/createSession', sessionController.createSession);
+sessionRoutes.patch('/updateSession/:sessionId', sessionController.updateSession);
+sessionRoutes.delete('/deleteSession/:sessionId', sessionController.deleteSession);
 module.exports = sessionRoutes;

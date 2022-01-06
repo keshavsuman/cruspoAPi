@@ -23,73 +23,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var appointmentAPI = __importStar(require("../../../controller/appointment/appointmentAPI"));
+var appointmentController = __importStar(require("../../../controller/appointment/appointmentController"));
 var sendMailController_1 = require("../../../controller/mail/sendMailController");
 var appointmentRouter = express_1.default();
-appointmentRouter.get('/allAppointments', appointmentAPI.allAppointment);
-appointmentRouter.get('/:id', appointmentAPI.getAppointment);
-/**
- *
-    request:
-    month : single digit month index,
-    year: four digit year
-    
-    response:
-    [
-        {
-            "appointmentId": "678a32cwuehc7247r92t",
-            "timings": {
-                "startTime": "2021-06-11T13:07:31.351Z",
-                "endTime": "2021-06-11T13:07:31.351Z"
-                },
-                "bookedDate": "2021-04-30T18:30:00.000Z",
-            }
-        ]
-*/
-appointmentRouter.get('/getBookedAppointments/:type', appointmentAPI.getBookedAppointments);
-/**
- *  request Method:- POST
- *  request body:
- *  {
- *   "firstName":"keshav",
- *   "lastName":"suman",
- *   "bookedDate":"2021-04-30T18:30:00.000Z",
- *   "email":"keshavsuan96@gmail.com",
- *   "appointmentId":"aerb",
- *   "timings":{
- *           "startTime":"1623416851351",
- *           "endTime":"1623416851351"
- *       }
- *   }
- *
- *   if(success):
- *         return "appointment created"; statusCode 201
- *   if(failure):
- *         return "error.message" statusCode 401
- */
-appointmentRouter.post('/bookAppointment/:appointmentId', appointmentAPI.bookAppointment);
-/**
- *  Request
- *  @method POST
- *  Body:{
- *          'appointmentTitle':string,
- *          'appointmentDescription':string,
- *          'appointmentThumbnail':string,
- *          'appointmentPrice':Number,
- *          'currency':JSON,
- *          'timeZone':string,
- *          'creatorId':string,
- *  }
- *
- *  if(Success):
- *  @returns
- *      "appointment created" 201
- *  @returns
- *  if(failure):
- *      "error.message" 401
- *
- */
-appointmentRouter.post('/createAppointment', appointmentAPI.createAppointments);
+appointmentRouter.get('/:id', appointmentController.getAppointmentById);
+appointmentRouter.post('/getPastAppointmentBookings', appointmentController.getPastAppointmentBookings);
+appointmentRouter.post('/getUpcomingAppointmentBookings', appointmentController.getUpcomingAppointmentBookings);
+appointmentRouter.delete('/:id', appointmentController.deleteAppointment);
+appointmentRouter.post('/updateAppointment', appointmentController.updateAppointment);
+appointmentRouter.post('/sendMail', sendMailController_1.sendAppointmentRemainderMail);
+appointmentRouter.post('/createAppointment', appointmentController.createAppointments);
+appointmentRouter.post('/bookAppointment/:appointmentId', appointmentController.bookAppointment);
 /**
  *  request Method POST:
  *  body:{
@@ -122,15 +66,4 @@ appointmentRouter.post('/createAppointment', appointmentAPI.createAppointments);
  *      return "error.message" statusCode 401
  *
  */
-appointmentRouter.post('/updateAppointment', appointmentAPI.updateAppointment);
-/**
- *
- * if(success):
- *      return "appointment deleted" statusCode 201
- * if(failure):
- *      return "error.message" statusCode 401
- *
- */
-appointmentRouter.delete('/:id', appointmentAPI.deleteAppointment);
-appointmentRouter.post('/sendMail', sendMailController_1.sendAppointmentRemainderMail);
 module.exports = appointmentRouter;

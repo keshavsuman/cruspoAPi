@@ -58,7 +58,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendSubscribeMail = exports.sendMailToFormResponse = exports.sendMailForWebsiteRequest = exports.sendRemainderMail = exports.sendAppointmentRemainderMail = exports.sendRemainderMailTest = exports.sendDownloadFormMail = exports.sendResetPasswordMailToLearner = exports.sendResetPasswordMailToCreator = exports.sendFormSubmissionMailToCreator = exports.sendLearnerRegisterMailToCreator = void 0;
+exports.sendSubscribeMail = exports.sendMailToFormResponse = exports.sendMailForWebsiteRequest = exports.sendRemainderMail = exports.sendAppointmentRemainderMail = exports.sendRemainderMailTest = exports.sendDownloadFormMail = exports.sendResetPasswordMailToUser = exports.sendResetPasswordMailToCreator = exports.sendFormSubmissionMailToCreator = exports.sendUserRegisterMailToCreator = void 0;
 var templates_mail_1 = __importDefault(require("./templates.mail"));
 var transporters = __importStar(require("./transporters.mail"));
 var mailTemplateModel_1 = __importDefault(require("../../models/mail/mailTemplateModel"));
@@ -67,7 +67,7 @@ var moment_1 = __importDefault(require("moment"));
 var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
 var formSubmissionModel_1 = __importDefault(require("../../models/form/formSubmissionModel"));
 var axios_1 = __importDefault(require("axios"));
-function sendLearnerRegisterMailToCreator(to) {
+function sendUserRegisterMailToCreator(to) {
     return __awaiter(this, void 0, void 0, function () {
         var mail;
         return __generator(this, function (_a) {
@@ -87,7 +87,7 @@ function sendLearnerRegisterMailToCreator(to) {
         });
     });
 }
-exports.sendLearnerRegisterMailToCreator = sendLearnerRegisterMailToCreator;
+exports.sendUserRegisterMailToCreator = sendUserRegisterMailToCreator;
 function sendFormSubmissionMailToCreator(to, formName, website, data) {
     return __awaiter(this, void 0, void 0, function () {
         var mail;
@@ -127,14 +127,14 @@ function sendResetPasswordMailToCreator(email, link) {
     });
 }
 exports.sendResetPasswordMailToCreator = sendResetPasswordMailToCreator;
-function sendResetPasswordMailToLearner(email, link) {
+function sendResetPasswordMailToUser(email, link) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/];
         });
     });
 }
-exports.sendResetPasswordMailToLearner = sendResetPasswordMailToLearner;
+exports.sendResetPasswordMailToUser = sendResetPasswordMailToUser;
 function sendDownloadFormMail(to, name) {
     return __awaiter(this, void 0, void 0, function () {
         var link;

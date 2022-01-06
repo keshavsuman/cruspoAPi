@@ -39,50 +39,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.createContent = exports.getContents = void 0;
+exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.createContent = exports.getContentById = exports.getContents = void 0;
 var contentModel_1 = __importDefault(require("../../models/content/contentModel"));
+var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
 function getContents(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, limit, skip, contents, error_1;
+        var _a, select, project, limit, skip, contentType, search, match, contents, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip, contentType = _a.contentType, search = _a.search;
+                    match = new Map();
+                    match.set('status', { $in: ['published', 'unpublished', 'draft'] });
+                    if (contentType) {
+                        match.set('contentType', contentType);
+                    }
+                    if (search) {
+                        match.set('$or', [{ contentTitle: { $regex: search, $options: 'i' } }, { contentDescription: { $regex: search, $options: 'i' } }]);
+                    }
                     return [4 /*yield*/, contentModel_1.default(res.get('userName')).aggregate([
                             {
-                                $match: {
-                                    'contentTitle': { '$regex': req.body.search, '$options': 'i' },
-                                    'contentType': req.body.contentType,
-                                    'contentStatus': { $in: ['published', 'unpublished', 'draft'] }
-                                }
+                                $match: match
                             }, {
                                 $sort: {
                                     'createdAt': -1
                                 }
-                            }, {
-                                $limit: limit
                             },
                             {
-                                $skip: skip
+                                $limit: limit !== null && limit !== void 0 ? limit : 20
                             },
                             {
-                                $project: project
-                            }
+                                $skip: skip !== null && skip !== void 0 ? skip : 0
+                            },
+                            // {
+                            //     $project:project
+                            // }
                         ])];
                 case 1:
                     contents = _b.sent();
-                    res.status(200).send({
+                    res.status(200).json({
                         status: 200,
+                        message: "Contents fetched successfully",
                         data: contents
                     });
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _b.sent();
                     console.log(error_1);
-                    res.status(500).send({
-                        error: 'Internal Server Error'
+                    res.status(500).json({
+                        status: 500,
+                        message: error_1,
+                        data: null
                     });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
@@ -91,9 +100,48 @@ function getContents(req, res) {
     });
 }
 exports.getContents = getContents;
+function getContentById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var content, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 4, , 5]);
+                    if (!req.params.id) return [3 /*break*/, 2];
+                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).findById(req.params.id)];
+                case 1:
+                    content = _a.sent();
+                    res.status(200).send({
+                        status: 200,
+                        data: content
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    res.status(200).json({
+                        status: 400,
+                        message: "Content id is required",
+                        data: null
+                    });
+                    _a.label = 3;
+                case 3: return [3 /*break*/, 5];
+                case 4:
+                    error_2 = _a.sent();
+                    console.log(error_2);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error',
+                        data: null
+                    });
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getContentById = getContentById;
 function createContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_2;
+        var error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -114,8 +162,8 @@ function createContent(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_2 = _a.sent();
-                    console.log(error_2);
+                    error_3 = _a.sent();
+                    console.log(error_3);
                     res.status(500).send({
                         status: 500,
                         error: 'Internal Server Error'
@@ -129,7 +177,7 @@ function createContent(req, res) {
 exports.createContent = createContent;
 function getFileUploadURL(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var s3, url, error_3;
+        var s3, url, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -151,9 +199,9 @@ function getFileUploadURL(req, res) {
                     res.status(200).send({ url: url });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_3 = _a.sent();
-                    console.log(error_3);
-                    res.status(500).send(error_3);
+                    error_4 = _a.sent();
+                    console.log(error_4);
+                    res.status(500).send(error_4);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -163,7 +211,7 @@ function getFileUploadURL(req, res) {
 exports.getFileUploadURL = getFileUploadURL;
 function deleteContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_4;
+        var error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -179,8 +227,8 @@ function deleteContent(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_4 = _a.sent();
-                    console.log(error_4);
+                    error_5 = _a.sent();
+                    console.log(error_5);
                     res.status(500).send({
                         error: 'Internal Server Error'
                     });
@@ -193,7 +241,7 @@ function deleteContent(req, res) {
 exports.deleteContent = deleteContent;
 function deleteMultipleContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_5;
+        var error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -211,8 +259,8 @@ function deleteMultipleContent(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_5 = _a.sent();
-                    console.log(error_5);
+                    error_6 = _a.sent();
+                    console.log(error_6);
                     res.status(500).send({
                         error: 'Internal Server Error'
                     });
@@ -223,3 +271,112 @@ function deleteMultipleContent(req, res) {
     });
 }
 exports.deleteMultipleContent = deleteMultipleContent;
+function createCollection(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_7;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_7 = _a.sent();
+                    console.log(error_7);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_7,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.createCollection = createCollection;
+function updateCollection(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_8;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_8 = _a.sent();
+                    console.log(error_8);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_8,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.updateCollection = updateCollection;
+function deleteCollection(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_9;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_9 = _a.sent();
+                    console.log(error_9);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_9,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteCollection = deleteCollection;
+function getCollectionById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_10;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).findById(req.params.id)];
+                case 1:
+                    _a.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Collection fetched",
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_10 = _a.sent();
+                    console.log(error_10);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_10,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getCollectionById = getCollectionById;

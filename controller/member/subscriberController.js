@@ -113,7 +113,7 @@ function deleteSubscriber(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
-                            status: subscriberModel_1.learnerStatus.DELETED
+                            status: subscriberModel_1.userStatus.DELETED
                         })];
                 case 1:
                     _a.sent();

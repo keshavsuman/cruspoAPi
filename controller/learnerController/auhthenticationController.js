@@ -57,6 +57,7 @@ function login(req, res) {
                             },
                             project: {
                                 _id: 1,
+                                domainNames: 1,
                                 userName: 1
                             }
                         }, {
@@ -66,18 +67,18 @@ function login(req, res) {
                         })];
                 case 1:
                     response = _a.sent();
-                    console.log(response.data);
-                    if (response.data.length == 0) {
+                    if (response.data.status != 200) {
                         res.status(403).json({
-                            status: 404,
-                            message: 'User Not Found',
+                            status: 403,
+                            message: 'Bad request',
                         });
                         return [2 /*return*/];
                     }
                     if (!(response.status == 200)) return [3 /*break*/, 3];
-                    return [4 /*yield*/, subscriberModel_1.default(response.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
+                    return [4 /*yield*/, subscriberModel_1.default(response.data.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
                 case 2:
                     learner = _a.sent();
+                    console.log(learner);
                     if (learner) {
                         if (!bcryptjs_1.default.compareSync(req.body.password, learner['password'])) {
                             res.status(200).json({
@@ -89,11 +90,12 @@ function login(req, res) {
                         }
                         token = jsonwebtoken_1.default.sign({
                             _id: learner._id,
-                            creatorDomains: response.data.domainNames,
+                            creatorDomains: response.data.data.domainNames,
                             firstName: learner.firstName,
                             lastName: learner.lastName,
                             email: learner.email,
-                            userType: 'user'
+                            userType: 'user',
+                            creator: response.data.data.userName,
                         }, String('secret'), {
                             expiresIn: 60 * 60 * 24
                         });
@@ -108,6 +110,13 @@ function login(req, res) {
                                 },
                                 token: token
                             }
+                        });
+                    }
+                    else {
+                        res.status(200).json({
+                            status: 200,
+                            message: "User doesn't exits",
+                            data: null
                         });
                     }
                     _a.label = 3;
@@ -128,18 +137,18 @@ function login(req, res) {
 exports.login = login;
 function signup(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var learnerResponse, response, error_2;
+        var creator, user, salt, password, user_1, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/learner/get', {
+                    _a.trys.push([0, 8, , 9]);
+                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             select: {
-                                email: req.body.email
+                                domainNames: { $in: [req.headers.host] }
                             },
                             project: {
-                                email: 1,
-                                password: 1,
+                                _id: 1,
+                                userName: 1
                             }
                         }, {
                             headers: {
@@ -147,46 +156,45 @@ function signup(req, res) {
                             },
                         })];
                 case 1:
-                    learnerResponse = _a.sent();
-                    if (learnerResponse.data.length > 0) {
-                        res.status(403).send({ message: 'User Already Exits' });
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/learner/signup', {
+                    creator = _a.sent();
+                    return [4 /*yield*/, subscriberModel_1.default(creator.data.data.userName).findOne({ email: req.body.email })];
+                case 2:
+                    user = _a.sent();
+                    if (!user) return [3 /*break*/, 3];
+                    res.status(200).json({
+                        status: 200,
+                        message: "User with this Email Already exists",
+                        data: null
+                    });
+                    return [3 /*break*/, 7];
+                case 3: return [4 /*yield*/, bcryptjs_1.default.genSalt()];
+                case 4:
+                    salt = _a.sent();
+                    return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, salt)];
+                case 5:
+                    password = _a.sent();
+                    return [4 /*yield*/, subscriberModel_1.default(creator.data.data.userName).create({
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
-                            password: req.body.password,
-                            domainName: req.body.domainName,
-                        }, {
-                            headers: {
-                                'Content-type': 'application/json'
-                            }
+                            password: password,
+                            creatorId: creator.data.data._id,
                         })];
-                case 2:
-                    response = _a.sent();
-                    if (!(response.status === 200)) return [3 /*break*/, 3];
-                    res.status(403).json({ message: response.data.message });
-                    return [3 /*break*/, 5];
-                case 3: return [4 /*yield*/, subscriberModel_1.default(response.data.creator.userName).create({
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        email: req.body.email,
-                        password: response.data.learner.password,
-                        creatorId: response.data.creator._id,
-                        learnerRefId: response.data.learner._id
-                    })];
-                case 4:
-                    _a.sent();
-                    res.status(201).send({ message: 'user Signup successfull' });
-                    _a.label = 5;
-                case 5: return [3 /*break*/, 7];
                 case 6:
+                    user_1 = _a.sent();
+                    res.status(201).json({
+                        status: 201,
+                        message: 'User Signup successfull',
+                        data: user_1
+                    });
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     error_2 = _a.sent();
                     console.log(error_2);
                     res.status(500).send(error_2);
-                    return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     });

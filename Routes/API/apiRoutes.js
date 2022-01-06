@@ -75,8 +75,6 @@ apiRoutes.use('/admin/program', programRoutes);
 apiRoutes.use('/admin/form', formRoutes);
 // apiRoutes.use('/admin/session',sessionRoutes);
 // apiRoutes.use('/admin/resource',resourceRoutes);
-// apiRoutes.use('/admin/website',websiteRoutes);
-// apiRoutes.use('/admin/event',eventRoutes);
 // apiRoutes.use('/admin/meet',meetRoutes);
 apiRoutes.post('/admin/helpAndSupport/raiseTicket', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_1;

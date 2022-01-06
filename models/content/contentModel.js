@@ -83,6 +83,7 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
     // },
     status: {
         type: String,
+        default: 'draft',
         enum: ['published', 'unpublished', 'draft', 'deleted']
     },
 }, { timestamps: true }); };

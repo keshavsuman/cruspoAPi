@@ -67,7 +67,7 @@ exports.appointmentSchema = new mongoose_1.default.Schema({
     },
     status: {
         type: String,
-        enum: ['DRAFT', 'PUBLISHED', 'DELETED'],
+        enum: ['DRAFT', 'PUBLISHED', 'DELETED', 'UNPUBLISHED'],
         default: 'DRAFT'
     },
     dateOverride: [{ type: mongoose_1.default.Schema.Types.Map }],

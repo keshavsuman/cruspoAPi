@@ -34,10 +34,6 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true
 }));
-app.use(function (req, res, next) {
-    console.log(req.url);
-    next();
-});
 app.use('/api', apiRoutes);
 app.use('/form', formRoutes);
 app.use('/payment', paymentRoutes);

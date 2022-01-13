@@ -59,13 +59,12 @@ var userRoutes = require('./user/index');
 var auth = require('../../middlewares/authMiddleware');
 var apiRoutes = express_1.Router();
 apiRoutes.use(function (req, res, next) {
-    console.log(req.url);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-apiRoutes.use('/admin/authentication', authenticationRoutes);
 apiRoutes.use('/user', userRoutes);
+apiRoutes.use('/admin/authentication', authenticationRoutes);
 apiRoutes.post('/bookAppointment', bookAppointmentController_1.bookAppointment);
 apiRoutes.use(auth);
 apiRoutes.use('/admin/appointment', appointmentRoutes);

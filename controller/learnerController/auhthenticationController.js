@@ -78,9 +78,8 @@ function login(req, res) {
                     return [4 /*yield*/, subscriberModel_1.default(response.data.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
                 case 2:
                     learner = _a.sent();
-                    console.log(learner);
                     if (learner) {
-                        if (!bcryptjs_1.default.compareSync(req.body.password, learner['password'])) {
+                        if (!bcryptjs_1.default.compareSync(req.body.password, learner.password)) {
                             res.status(200).json({
                                 status: 200,
                                 message: "PASSWORD_INCORRECT",

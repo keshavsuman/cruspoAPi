@@ -39,5 +39,5 @@ app.use('/form', formRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/bookAppointment', bookAppointmentRoutes);
 app.listen(process.env.PORT, function () {
-    console.log("Server is running in port 5000");
+    console.log("Server is running in port " + process.env.PORT);
 });

@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,7 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserSessions = exports.getSessionById = exports.getSessions = exports.deleteSession = exports.updateSession = exports.createSession = void 0;
+exports.getUserSessions = exports.getSessionById = exports.getPastSessions = exports.getUpcomingSessions = exports.getSessions = exports.deleteSession = exports.updateSession = exports.createSession = void 0;
 var sessionModel_1 = __importDefault(require("../../models/sessionModel"));
 function createSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -153,69 +164,171 @@ function deleteSession(req, res) {
 exports.deleteSession = deleteSession;
 function getSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var sessions, error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, select, project, limit, skip, sessions, error_3;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    sessions = [];
-                    if (!(req.params.type == "upcoming")) return [3 /*break*/, 2];
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find({
-                            status: 'ACTIVE',
-                            startDate: { $gte: new Date(Date.now()) }
-                        }).limit(50)];
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
-                    sessions = _a.sent();
-                    return [3 /*break*/, 4];
+                    sessions = _b.sent();
+                    // if(req.params.type=="upcoming"){
+                    //     sessions = await sessionModel(res.get('userName')).find({
+                    //         status:'ACTIVE',
+                    //         startDate:{$gte:new Date(Date.now())}
+                    //     }).limit(50);
+                    // }else if(req.params.type=="past"){
+                    //     sessions = await sessionModel(res.get('userName')).find({
+                    //         status:'ACTIVE',
+                    //         startDate:{$lte:new Date(Date.now())}
+                    //     }).limit(50);
+                    // }
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Sessions fetched successfully',
+                        data: sessions
+                    });
+                    return [3 /*break*/, 3];
                 case 2:
-                    if (!(req.params.type == "past")) return [3 /*break*/, 4];
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find({
-                            status: 'ACTIVE',
-                            startDate: { $lte: new Date(Date.now()) }
-                        }).limit(50)];
-                case 3:
-                    sessions = _a.sent();
-                    _a.label = 4;
-                case 4:
-                    res.status(200).send(sessions);
-                    return [3 /*break*/, 6];
-                case 5:
-                    error_3 = _a.sent();
+                    error_3 = _b.sent();
                     console.log(error_3);
-                    res.status(500).send();
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    res.status(500).json({
+                        status: 500,
+                        message: error_3,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
 exports.getSessions = getSessions;
+function getUpcomingSessions(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, limit, skip, sessions, error_4;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).aggregate([
+                            {
+                                $match: __assign(__assign({}, select), { startDate: { $gte: new Date(Date.now()) } }),
+                            },
+                            {
+                                $group: {
+                                    _id: "$startDate",
+                                    sessions: { $push: "$$ROOT" }
+                                },
+                            }, {
+                                $limit: limit !== null && limit !== void 0 ? limit : 20,
+                            }, {
+                                $skip: skip !== null && skip !== void 0 ? skip : 0
+                            },
+                        ])];
+                case 1:
+                    sessions = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Sessions upcoming fetched successfully',
+                        data: sessions
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _b.sent();
+                    console.log(error_4);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_4,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getUpcomingSessions = getUpcomingSessions;
+function getPastSessions(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, limit, skip, sessions, error_5;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).aggregate([
+                            {
+                                $match: __assign(__assign({}, select), { startDate: { $lte: new Date(Date.now()) } }),
+                            },
+                            {
+                                $group: {
+                                    _id: "$startDate",
+                                    sessions: { $push: "$$ROOT" }
+                                },
+                            }, {
+                                $limit: limit !== null && limit !== void 0 ? limit : 20,
+                            }, {
+                                $skip: skip !== null && skip !== void 0 ? skip : 0
+                            },
+                        ])];
+                case 1:
+                    sessions = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Sessions past fetched successfully',
+                        data: sessions
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_5 = _b.sent();
+                    console.log(error_5);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_5,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getPastSessions = getPastSessions;
 function getSessionById(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, error_4;
+        var session, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findById(req.params.sessionId)];
+                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findById(req.params.id)];
                 case 1:
                     session = _a.sent();
                     if (session) {
-                        res.status(200).send(session);
+                        res.status(200).json({
+                            status: 200,
+                            message: 'Session fetched successfully',
+                            data: session
+                        });
                     }
                     else {
-                        res.status(200).send({
+                        res.status(200).json({
                             status: 404,
-                            message: "Session not found"
+                            message: 'Session not found',
+                            data: null
                         });
                     }
                     return [3 /*break*/, 3];
                 case 2:
-                    error_4 = _a.sent();
-                    console.log(error_4);
-                    res.status(500).send({
+                    error_6 = _a.sent();
+                    console.log(error_6);
+                    res.status(500).json({
                         status: 500,
-                        message: error_4
+                        message: error_6,
+                        data: null
                     });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];

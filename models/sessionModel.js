@@ -18,26 +18,17 @@ exports.sessionSchema = new mongoose_1.default.Schema({
         type: Date,
         required: true
     },
-    startTime: {
-        type: String,
-        required: true
-    },
-    timeZone: {
-        type: String,
-        required: true
-    },
-    duration: {
-        type: {
-            hours: { type: Number },
-            minutes: { type: Number },
-        },
-        required: true
-    },
-    repeatFrequency: {
-        type: String,
-        enum: ['ONCE', 'DAILY', 'MONTOFRI', 'CUSTOM'],
-        required: true
-    },
+    // startTime: {
+    //     type : String,
+    //     required:true
+    // },
+    // duration:{ 
+    //     type:{
+    //         hours:{type:Number},
+    //         minutes:{type:Number},
+    //     },
+    //     required:true
+    // },
     notifyViaEmail: {
         type: Boolean,
         default: false

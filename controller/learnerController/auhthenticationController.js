@@ -53,7 +53,7 @@ function login(req, res) {
                     _a.trys.push([0, 4, , 5]);
                     return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             select: {
-                                domainNames: { $in: [req.headers.host] }
+                                domainNames: { $in: [req.headers.cruspohost] }
                             },
                             project: {
                                 _id: 1,
@@ -144,7 +144,7 @@ function signup(req, res) {
                     _a.trys.push([0, 8, , 9]);
                     return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             select: {
-                                domainNames: { $in: [req.headers.host] }
+                                domainNames: { $in: [req.headers.cruspohost] }
                             },
                             project: {
                                 _id: 1,

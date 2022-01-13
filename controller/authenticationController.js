@@ -58,14 +58,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCreator = exports.learnerForgetPassword = exports.refreshToken = exports.learnerSignin = exports.learnerSignup = exports.resetPassword = exports.forgetPassword = exports.updateProfile = exports.login = void 0;
+exports.getCreator = exports.resetPassword = exports.forgetPassword = exports.updateProfile = exports.login = void 0;
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var axios_1 = __importDefault(require("axios"));
-var subscriberModel_1 = __importDefault(require("../models/manageMember/subscriberModel"));
 var mailSender = __importStar(require("./mail/sendMailController"));
-var mongoose_1 = require("mongoose");
 dotenv_1.default.config();
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -235,212 +233,9 @@ exports.resetPassword = resetPassword;
  * learner dahsboard authentication function started
  *
  */
-function learnerSignup(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var learner, salt, password, learnerRegistered, newLearner, jwtToken, error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 9, , 10]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).find({ email: req.body.email })];
-                case 1:
-                    learner = _a.sent();
-                    if (!(learner.length > 0)) return [3 /*break*/, 2];
-                    res.render('learn/sign-up', { error: 'User Already Exists', mode: "signup" });
-                    return [3 /*break*/, 8];
-                case 2: return [4 /*yield*/, bcryptjs_1.default.genSalt()];
-                case 3:
-                    salt = _a.sent();
-                    return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, salt)];
-                case 4:
-                    password = _a.sent();
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/learner/signup', {
-                            firstName: req.body.firstName,
-                            lastName: req.body.lastName,
-                            email: req.body.email,
-                            password: password,
-                            creatorId: process.env.userId,
-                        })];
-                case 5:
-                    learnerRegistered = _a.sent();
-                    if (!mongoose_1.Types.ObjectId.isValid(learnerRegistered.data)) return [3 /*break*/, 7];
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).create({
-                            firstName: req.body.firstName,
-                            lastName: req.body.lastName,
-                            email: req.body.email,
-                            password: password,
-                            learnerRefId: learnerRegistered.data
-                        })];
-                case 6:
-                    newLearner = _a.sent();
-                    jwtToken = jsonwebtoken_1.default.sign({
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        email: req.body.email,
-                        learnerId: newLearner['_id'],
-                        creatorId: String(process.env.userId),
-                        userType: "learner",
-                        isVerified: false
-                    }, String(process.env.userId), {
-                        expiresIn: 60 * 60 * 24
-                    });
-                    res.cookie('authLearnerToken', jwtToken, { httpOnly: true });
-                    res.redirect('/learn');
-                    return [3 /*break*/, 8];
-                case 7:
-                    res.render('learn/sign-up', { error: 'Some error occured,please try later', mode: "signup" });
-                    _a.label = 8;
-                case 8: return [3 /*break*/, 10];
-                case 9:
-                    error_3 = _a.sent();
-                    res.render('learn/sign-up', { error: error_3, mode: "signup", });
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.learnerSignup = learnerSignup;
-function learnerSignin(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var learner, token, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).find({ email: req.body.email })];
-                case 1:
-                    learner = _a.sent();
-                    if (learner.length == 0) {
-                        res.render('learn/sign-up', { error: 'User doesn\'t exits', mode: "login" });
-                    }
-                    else {
-                        // var learner = await axios.post('https://authentication.cruspo.com/learner/login', {
-                        //     email: req.body.email
-                        // });
-                        if (!bcryptjs_1.default.compareSync(req.body.password, learner[0]['password'])) {
-                            res.render('learn/sign-up', { error: 'Password is not correct', mode: "login" });
-                            return [2 /*return*/];
-                        }
-                        token = jsonwebtoken_1.default.sign({
-                            learnerId: learner[0]._id,
-                            firstName: learner[0].firstName,
-                            lastName: learner[0].lastName,
-                            profileImage: learner[0].profileImage,
-                            creatorId: String(process.env.userId),
-                            userType: 'learner',
-                            isVerified: false
-                        }, String(process.env.userId), {
-                            expiresIn: 60 * 60 * 24
-                        });
-                        res.cookie('authLearnerToken', token, { httpOnly: true });
-                        res.status(200);
-                        res.redirect('/learn');
-                    }
-                    return [3 /*break*/, 3];
-                case 2:
-                    e_1 = _a.sent();
-                    res.render('learn/sign-up', { error: e_1, mode: "login" });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.learnerSignin = learnerSignin;
-function refreshToken(authToken, userDoc) {
-    return __awaiter(this, void 0, void 0, function () {
-        var user, data, token;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!(userDoc == null || userDoc == undefined)) return [3 /*break*/, 2];
-                    user = jsonwebtoken_1.default.verify(authToken, String(process.env.userId));
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/api/getUserDetailsByEmail', {
-                            email: user['email']
-                        })];
-                case 1:
-                    data = _a.sent();
-                    userDoc = data.data;
-                    _a.label = 2;
-                case 2:
-                    try {
-                        token = jsonwebtoken_1.default.sign({
-                            userName: userDoc['userName'],
-                            userId: userDoc['_id'],
-                            firstName: userDoc['firstName'],
-                            lastName: userDoc['lastName'],
-                            profileImage: userDoc['profileImage'],
-                            about: userDoc['about'],
-                            userType: 'creator',
-                            bgImage: userDoc['bgImage'],
-                        }, String(process.env.userId), {
-                            expiresIn: 60 * 60 * 24
-                        });
-                        return [2 /*return*/, token];
-                    }
-                    catch (err) {
-                        console.log(err);
-                    }
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.refreshToken = refreshToken;
-function learnerForgetPassword(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var responseData, token, link, error_4;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/learner/forgetPassword', {
-                            email: req.body.email
-                        }, {
-                        // headers:{
-                        //     'Content-Type':'application/x-www-form-urlencoded'
-                        // }
-                        })];
-                case 1:
-                    responseData = _a.sent();
-                    if (responseData.status == 201) {
-                        if (responseData.data == 'USER_NOT_FOUND') {
-                            res.render('forgot-password', {
-                                error: 'this is not a recognised mail',
-                                mode: 'learner'
-                            });
-                        }
-                        else {
-                            token = jsonwebtoken_1.default.sign({
-                                email: req.body.email,
-                            }, String(process.env.userId), {
-                                expiresIn: 60 * 60
-                            });
-                            link = req.protocol + '://' + req.hostname + '/authentication/resetpassword/' + token;
-                            mailSender.sendResetPasswordMailToUser(req.body.email, link);
-                            res.redirect('/authentication/resetPassword');
-                        }
-                    }
-                    else {
-                        res.render('forgot-password', {
-                            error: responseData.data
-                        });
-                    }
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_4 = _a.sent();
-                    console.log(error_4);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.learnerForgetPassword = learnerForgetPassword;
 function getCreator(creatorId) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response, error_5;
+        var url, response, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -461,8 +256,8 @@ function getCreator(creatorId) {
                     }
                     return [3 /*break*/, 3];
                 case 2:
-                    error_5 = _a.sent();
-                    console.log(error_5);
+                    error_3 = _a.sent();
+                    console.log(error_3);
                     return [2 /*return*/, null];
                 case 3: return [2 /*return*/];
             }

@@ -63,7 +63,7 @@ learnerRouter.post('/page', function (req, res) { return __awaiter(void 0, void 
                 _a = req.body, limit = _a.limit, skip = _a.skip;
                 return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                         select: {
-                            domainNames: { $in: [req.headers.host] }
+                            domainNames: { $in: [req.headers.cruspohost] }
                         },
                         project: {
                             _id: 0,

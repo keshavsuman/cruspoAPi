@@ -339,18 +339,32 @@ function getSessionById(req, res) {
 exports.getSessionById = getSessionById;
 function getUserSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            try {
+        var _a, select, project, limit, skip, sessions, error_7;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
+                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                case 1:
+                    sessions = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: 'Session fetched successfully',
+                        data: sessions
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_7 = _b.sent();
+                    console.log(error_7);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_7,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (error) {
-                console.log(error);
-                res.status(500).json({
-                    status: 500,
-                    message: error,
-                    data: null
-                });
-            }
-            return [2 /*return*/];
         });
     });
 }

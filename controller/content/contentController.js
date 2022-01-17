@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.createContent = exports.getContentById = exports.getContents = void 0;
+exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.createContent = exports.getContentById = exports.getContents = void 0;
 var contentModel_1 = __importDefault(require("../../models/content/contentModel"));
 var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
@@ -380,3 +380,35 @@ function getCollectionById(req, res) {
     });
 }
 exports.getCollectionById = getCollectionById;
+function getContentsByUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, skip, limit, contents, error_11;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
+                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                case 1:
+                    contents = _b.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Contents fetched",
+                        data: contents
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_11 = _b.sent();
+                    console.log(error_11);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_11,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getContentsByUser = getContentsByUser;

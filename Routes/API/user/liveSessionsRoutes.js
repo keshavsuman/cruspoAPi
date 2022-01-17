@@ -21,6 +21,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var sessionController = __importStar(require("../../../controller/session/sessionController"));
+var learnAuthMiddleware_1 = require("../../../middlewares/learnAuthMiddleware");
 var liveSessionRoutes = express_1.Router();
+liveSessionRoutes.use(learnAuthMiddleware_1.auth);
 liveSessionRoutes.post("/getSessions", sessionController.getUserSessions);
 module.exports = liveSessionRoutes;

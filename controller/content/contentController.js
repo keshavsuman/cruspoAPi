@@ -64,7 +64,7 @@ function getContents(req, res) {
                                 $match: match
                             }, {
                                 $sort: {
-                                    'createdAt': -1
+                                    '_id': 1
                                 }
                             },
                             {

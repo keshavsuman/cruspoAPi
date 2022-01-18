@@ -82,7 +82,7 @@ function getAppointments(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a[0], project = _a[1], skip = _a[2], limit = _a[3];
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find(select, project).populate({ path: 'currency' }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     appointments = _b.sent();
                     res.status(200).json({

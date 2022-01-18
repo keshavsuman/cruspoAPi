@@ -46,7 +46,7 @@ var bookAppointmentController_1 = require("../../controller/appointment/bookAppo
 var appointmentRoutes = require('./admin/appointmentRoutes');
 var authenticationRoutes = require('./admin/authenticationRoutes');
 var mailRoutes = require('./admin/mailRoute');
-// const meetRoutes = require('./admin/meetRoutes');
+var meetRoutes = require('./admin/meetRoutes');
 var contentRoutes = require('./admin/contentRoutes');
 var programRoutes = require('./admin/programRoutes');
 var sessionRoutes = require('./admin/sessionRoutes');
@@ -75,7 +75,7 @@ apiRoutes.use('/admin/program', programRoutes);
 apiRoutes.use('/admin/form', formRoutes);
 apiRoutes.use('/admin/session', sessionRoutes);
 apiRoutes.use('/admin/media', mediaRoutes);
-// apiRoutes.use('/admin/meet',meetRoutes);
+apiRoutes.use('/admin/meet', meetRoutes);
 apiRoutes.post('/admin/helpAndSupport/raiseTicket', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var response, error_1;
     return __generator(this, function (_a) {

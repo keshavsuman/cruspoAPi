@@ -27,6 +27,7 @@ var appointmentController = __importStar(require("../../../controller/appointmen
 var sendMailController_1 = require("../../../controller/mail/sendMailController");
 var appointmentRouter = express_1.default();
 appointmentRouter.get('/:id', appointmentController.getAppointmentById);
+appointmentRouter.post('/getAppointments', appointmentController.getAppointments);
 appointmentRouter.post('/getPastAppointmentBookings', appointmentController.getPastAppointmentBookings);
 appointmentRouter.post('/getUpcomingAppointmentBookings', appointmentController.getUpcomingAppointmentBookings);
 appointmentRouter.delete('/:id', appointmentController.deleteAppointment);

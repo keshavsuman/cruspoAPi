@@ -52,6 +52,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserSessions = exports.getSessionById = exports.getPastSessions = exports.getUpcomingSessions = exports.getSessions = exports.deleteSession = exports.updateSession = exports.createSession = void 0;
 var sessionModel_1 = __importDefault(require("../../models/sessionModel"));
+var response_1 = require("../response");
 function createSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var session, error_1;
@@ -348,20 +349,20 @@ function getUserSessions(req, res) {
                     return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     sessions = _b.sent();
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: 'Session fetched successfully',
                         data: sessions
-                    });
+                    }, true);
                     return [3 /*break*/, 3];
                 case 2:
                     error_7 = _b.sent();
                     console.log(error_7);
-                    res.status(500).json({
+                    response_1.userResponse(res, 500, {
                         status: 500,
                         message: error_7,
                         data: null
-                    });
+                    }, false);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

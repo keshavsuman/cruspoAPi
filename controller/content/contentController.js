@@ -43,6 +43,7 @@ exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection
 var contentModel_1 = __importDefault(require("../../models/content/contentModel"));
 var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
+var response_1 = require("../response");
 function getContents(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var _a, select, project, limit, skip, contentType, search, match, contents, error_1;
@@ -391,20 +392,20 @@ function getContentsByUser(req, res) {
                     return [4 /*yield*/, contentModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     contents = _b.sent();
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: "Contents fetched",
                         data: contents
-                    });
+                    }, true);
                     return [3 /*break*/, 3];
                 case 2:
                     error_11 = _b.sent();
                     console.log(error_11);
-                    res.status(500).json({
+                    response_1.userResponse(res, 500, {
                         status: 500,
                         message: error_11,
                         data: null
-                    });
+                    }, false);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

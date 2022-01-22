@@ -45,6 +45,7 @@ var contentModel_1 = __importDefault(require("../../../models/content/contentMod
 var appointmentModel_1 = __importDefault(require("../../../models/appointmentModel"));
 var sessionModel_1 = __importDefault(require("../../../models/sessionModel"));
 var axios_1 = __importDefault(require("axios"));
+var response_1 = require("../../../controller/response");
 var authenticationRoutes = require("./authenticationRoutes");
 var programRoutes = require("./programRoutes");
 var liveSessionsRoutes = require('./liveSessionsRoutes');
@@ -99,7 +100,7 @@ learnerRouter.post('/page', function (req, res) { return __awaiter(void 0, void 
                     }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
             case 5:
                 sessions = _b.sent();
-                res.status(200).json({
+                response_1.userResponse(res, 200, {
                     status: 200,
                     message: "Page details",
                     data: {
@@ -109,16 +110,16 @@ learnerRouter.post('/page', function (req, res) { return __awaiter(void 0, void 
                         appointments: appointments,
                         sessions: sessions,
                     }
-                });
+                }, true);
                 return [3 /*break*/, 7];
             case 6:
                 error_1 = _b.sent();
                 console.log(error_1);
-                res.status(500).json({
+                response_1.userResponse(res, 500, {
                     status: 500,
                     message: error_1,
                     data: null
-                });
+                }, false);
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
         }

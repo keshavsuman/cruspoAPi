@@ -45,6 +45,7 @@ var programCategoryModel_1 = __importDefault(require("../../models/programCatego
 var programModel_1 = __importDefault(require("../../models/programModel"));
 var errorModel_1 = __importDefault(require("../../models/errorModel"));
 var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
+var response_1 = require("../response");
 function createProgram(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var newCategory, program, error_1;
@@ -276,11 +277,11 @@ function getProgramById(req, res) {
                     return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.id)];
                 case 1:
                     program = _a.sent();
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: "Progam Fetched Successfully",
                         data: program
-                    });
+                    }, true);
                     return [3 /*break*/, 3];
                 case 2:
                     error_5 = _a.sent();
@@ -288,7 +289,11 @@ function getProgramById(req, res) {
                         batchModel_1.default(res.get('userName')).createCollection();
                         // moduleModel(res.get('userName')).createCollection();
                     }
-                    res.status(500).send(error_5);
+                    response_1.userResponse(res, 200, {
+                        status: 500,
+                        message: error_5,
+                        data: null
+                    }, false);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -500,14 +505,14 @@ function getUserPrograms(req, res) {
                         }).limit(20)];
                 case 2:
                     programs = _a.sent();
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: "My Programs fetched successfully",
                         data: {
                             myPrograms: myPrograms,
                             programs: programs
                         }
-                    });
+                    }, true);
                     return [3 /*break*/, 9];
                 case 3:
                     error_9 = _a.sent();
@@ -527,22 +532,22 @@ function getUserPrograms(req, res) {
                         }).limit(20)];
                 case 6:
                     programs = _a.sent();
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: "My Programs fetched successfully",
                         data: {
-                            myPrograms: myPrograms.programsPurchased,
+                            myPrograms: myPrograms,
                             programs: programs
                         }
-                    });
+                    }, true);
                     return [3 /*break*/, 8];
                 case 7:
                     console.log(error_9);
-                    res.status(500).json({
+                    response_1.userResponse(res, 500, {
                         status: 500,
                         message: error_9,
                         data: null
-                    });
+                    }, false);
                     _a.label = 8;
                 case 8: return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];

@@ -44,6 +44,7 @@ var subscriberModel_1 = __importDefault(require("../../models/manageMember/subsc
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var axios_1 = __importDefault(require("axios"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var response_1 = require("../response");
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var response, learner, token, error_1;
@@ -68,10 +69,10 @@ function login(req, res) {
                 case 1:
                     response = _a.sent();
                     if (response.data.status != 200) {
-                        res.status(403).json({
+                        response_1.userResponse(res, 403, {
                             status: 403,
                             message: 'Bad request',
-                        });
+                        }, false);
                         return [2 /*return*/];
                     }
                     if (!(response.status == 200)) return [3 /*break*/, 3];
@@ -80,11 +81,11 @@ function login(req, res) {
                     learner = _a.sent();
                     if (learner) {
                         if (!bcryptjs_1.default.compareSync(req.body.password, learner.password)) {
-                            res.status(200).json({
+                            response_1.userResponse(res, 200, {
                                 status: 200,
                                 message: "PASSWORD_INCORRECT",
                                 data: null
-                            });
+                            }, false);
                             return [2 /*return*/];
                         }
                         token = jsonwebtoken_1.default.sign({
@@ -98,7 +99,7 @@ function login(req, res) {
                         }, String('secret'), {
                             expiresIn: 60 * 60 * 24
                         });
-                        res.status(200).json({
+                        response_1.userResponse(res, 200, {
                             status: 200,
                             message: "LOGIN_SUCCESSFULL",
                             data: {
@@ -109,24 +110,24 @@ function login(req, res) {
                                 },
                                 token: token
                             }
-                        });
+                        }, true);
                     }
                     else {
-                        res.status(200).json({
+                        response_1.userResponse(res, 200, {
                             status: 200,
                             message: "User doesn't exits",
                             data: null
-                        });
+                        }, false);
                     }
                     _a.label = 3;
                 case 3: return [3 /*break*/, 5];
                 case 4:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    res.status(500).json({
+                    response_1.userResponse(res, 500, {
                         status: 500,
                         message: error_1
-                    });
+                    }, false);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -160,11 +161,11 @@ function signup(req, res) {
                 case 2:
                     user = _a.sent();
                     if (!user) return [3 /*break*/, 3];
-                    res.status(200).json({
+                    response_1.userResponse(res, 200, {
                         status: 200,
                         message: "User with this Email Already exists",
                         data: null
-                    });
+                    }, false);
                     return [3 /*break*/, 7];
                 case 3: return [4 /*yield*/, bcryptjs_1.default.genSalt()];
                 case 4:
@@ -181,17 +182,21 @@ function signup(req, res) {
                         })];
                 case 6:
                     user_1 = _a.sent();
-                    res.status(201).json({
+                    response_1.userResponse(res, 200, {
                         status: 201,
                         message: 'User Signup successfull',
                         data: user_1
-                    });
+                    }, true);
                     _a.label = 7;
                 case 7: return [3 /*break*/, 9];
                 case 8:
                     error_2 = _a.sent();
                     console.log(error_2);
-                    res.status(500).send(error_2);
+                    response_1.userResponse(res, 500, {
+                        status: 500,
+                        message: error_2,
+                        data: null
+                    }, false);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }

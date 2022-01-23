@@ -11,15 +11,19 @@ var collectionSchema = new mongoose_1.default.Schema({
     collectionDescription: {
         type: String
     },
-    currency: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "currencies"
-    },
     price: {
-        type: Number
+        type: {
+            currency: {
+                type: mongoose_1.default.Schema.Types.ObjectId,
+                ref: "currencies"
+            },
+            amount: {
+                type: Number
+            }
+        }
     },
     accessPolicy: {
-        enum: ['lifetime', 'limited', 'free'],
+        enum: ['LIFETIME', 'LIMITED', 'FREE'],
     },
     contents: [{
             type: mongoose_1.default.Schema.Types.ObjectId,

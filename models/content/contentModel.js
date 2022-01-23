@@ -35,7 +35,8 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
         trim: true
     },
     contentThumbnail: {
-        type: String
+        type: String,
+        default: null,
     },
     contentType: {
         type: String,
@@ -46,6 +47,11 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    contentCollection: {
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId }],
+        ref: prefix + "_collection",
+        default: []
     },
     // contentCategory:{
     //     type:mongoose.Schema.Types.ObjectId,
@@ -83,8 +89,8 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
     // },
     status: {
         type: String,
-        default: 'draft',
-        enum: ['published', 'unpublished', 'draft', 'deleted']
+        default: 'DRAFT',
+        enum: ['PUBLISHED', 'UNPUBLISHED', 'DRAFT', 'DELETED']
     },
 }, { timestamps: true }); };
 function contentModel(prefix) {

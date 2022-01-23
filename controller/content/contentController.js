@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.createContent = exports.getContentById = exports.getContents = void 0;
+exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.getCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.updateContent = exports.createContent = exports.getContentById = exports.getContents = void 0;
 var contentModel_1 = __importDefault(require("../../models/content/contentModel"));
 var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
@@ -53,7 +53,7 @@ function getContents(req, res) {
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip, contentType = _a.contentType, search = _a.search;
                     match = new Map();
-                    match.set('status', { $in: ['published', 'unpublished', 'draft'] });
+                    match.set('status', { $in: ['PUBLISHED', 'UNPUBLISHED', 'DRAFT'] });
                     if (contentType) {
                         match.set('contentType', contentType);
                     }
@@ -142,7 +142,7 @@ function getContentById(req, res) {
 exports.getContentById = getContentById;
 function createContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_3;
+        var content, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -156,10 +156,11 @@ function createContent(req, res) {
                             isPaid: false
                         })];
                 case 1:
-                    _a.sent();
+                    content = _a.sent();
                     res.status(201).send({
                         status: 201,
-                        message: 'Content Registered Successfully'
+                        message: 'Content Registered Successfully',
+                        data: content
                     });
                     return [3 /*break*/, 3];
                 case 2:
@@ -176,9 +177,46 @@ function createContent(req, res) {
     });
 }
 exports.createContent = createContent;
+function updateContent(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var content, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                            contentTitle: req.body.contentTitle,
+                            contentDescription: req.body.contentDescription,
+                            contentThumbnail: req.body.contentThumbnail,
+                            isPaid: false,
+                            status: req.body.status,
+                            collection: req.body.collection
+                        }, { new: true })];
+                case 1:
+                    content = _a.sent();
+                    res.status(200).send({
+                        status: 200,
+                        message: 'Content Updated Successfully',
+                        data: content
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.log(error_4);
+                    res.status(500).send({
+                        status: 500,
+                        error: 'Internal Server Error'
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.updateContent = updateContent;
 function getFileUploadURL(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var s3, url, error_4;
+        var s3, url, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -191,18 +229,18 @@ function getFileUploadURL(req, res) {
                     });
                     return [4 /*yield*/, s3.getSignedUrl('putObject', {
                             Bucket: 'cruspostorage',
-                            // ContentType: type,   
+                            ContentType: req.body.fileType,
                             ACL: 'public-read',
-                            Key: req.params.fileName
+                            Key: req.body.fileName
                         })];
                 case 1:
                     url = _a.sent();
                     res.status(200).send({ url: url });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_4 = _a.sent();
-                    console.log(error_4);
-                    res.status(500).send(error_4);
+                    error_5 = _a.sent();
+                    console.log(error_5);
+                    res.status(500).send(error_5);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -212,51 +250,19 @@ function getFileUploadURL(req, res) {
 exports.getFileUploadURL = getFileUploadURL;
 function deleteContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_5;
+        var error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, contentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.contentId, {
-                            contentStatus: 'deleted'
+                            status: 'DELETED'
                         })];
                 case 1:
                     _a.sent();
                     res.status(200).send({
                         status: 200,
                         message: 'Content Deleted Successfully'
-                    });
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_5 = _a.sent();
-                    console.log(error_5);
-                    res.status(500).send({
-                        error: 'Internal Server Error'
-                    });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.deleteContent = deleteContent;
-function deleteMultipleContent(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_6;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).updateMany({
-                            _id: { $in: req.body.contentIds }
-                        }, {
-                            contentStatus: 'deleted'
-                        })];
-                case 1:
-                    _a.sent();
-                    res.status(200).send({
-                        status: 200,
-                        message: 'Contents Deleted Successfully'
                     });
                     return [3 /*break*/, 3];
                 case 2:
@@ -271,25 +277,31 @@ function deleteMultipleContent(req, res) {
         });
     });
 }
-exports.deleteMultipleContent = deleteMultipleContent;
-function createCollection(req, res) {
+exports.deleteContent = deleteContent;
+function deleteMultipleContent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).updateMany({
+                            _id: { $in: req.body.contentIds }
+                        }, {
+                            contentStatus: 'deleted'
+                        })];
                 case 1:
                     _a.sent();
+                    res.status(200).send({
+                        status: 200,
+                        message: 'Contents Deleted Successfully',
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_7 = _a.sent();
                     console.log(error_7);
-                    res.status(500).json({
-                        status: 500,
-                        message: error_7,
-                        data: null
+                    res.status(500).send({
+                        error: 'Internal Server Error'
                     });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
@@ -297,20 +309,26 @@ function createCollection(req, res) {
         });
     });
 }
-exports.createCollection = createCollection;
-function updateCollection(req, res) {
+exports.deleteMultipleContent = deleteMultipleContent;
+function getCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_8;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, select, project, skip, limit, collections, error_8;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
-                    _a.sent();
+                    collections = _b.sent();
+                    res.status(200).send({
+                        status: 200,
+                        message: "Collection fetched successfully",
+                        data: collections
+                    });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_8 = _a.sent();
+                    error_8 = _b.sent();
                     console.log(error_8);
                     res.status(500).json({
                         status: 500,
@@ -323,17 +341,30 @@ function updateCollection(req, res) {
         });
     });
 }
-exports.updateCollection = updateCollection;
-function deleteCollection(req, res) {
+exports.getCollection = getCollection;
+function createCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_9;
+        var collection, error_9;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({
+                            collectionName: req.body.collectionName,
+                            collectionDescription: req.body.collectionDescription,
+                            price: {
+                                currency: req.body.currency,
+                                amount: req.body.amount
+                            },
+                            status: req.body.status,
+                        })];
                 case 1:
-                    _a.sent();
+                    collection = _a.sent();
+                    res.status(201).send({
+                        status: 201,
+                        message: "Collection Created successfully",
+                        data: collection
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_9 = _a.sent();
@@ -349,22 +380,17 @@ function deleteCollection(req, res) {
         });
     });
 }
-exports.deleteCollection = deleteCollection;
-function getCollectionById(req, res) {
+exports.createCollection = createCollection;
+function updateCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var error_10;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
                 case 1:
                     _a.sent();
-                    res.status(200).json({
-                        status: 200,
-                        message: "Collection fetched",
-                        data: null
-                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_10 = _a.sent();
@@ -380,10 +406,67 @@ function getCollectionById(req, res) {
         });
     });
 }
+exports.updateCollection = updateCollection;
+function deleteCollection(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_11;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_11 = _a.sent();
+                    console.log(error_11);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_11,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteCollection = deleteCollection;
+function getCollectionById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_12;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).findById(req.params.id)];
+                case 1:
+                    _a.sent();
+                    res.status(200).json({
+                        status: 200,
+                        message: "Collection fetched",
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_12 = _a.sent();
+                    console.log(error_12);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_12,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
 exports.getCollectionById = getCollectionById;
 function getContentsByUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, skip, limit, contents, error_11;
+        var _a, select, project, skip, limit, contents, error_13;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -399,11 +482,11 @@ function getContentsByUser(req, res) {
                     }, true);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_11 = _b.sent();
-                    console.log(error_11);
+                    error_13 = _b.sent();
+                    console.log(error_13);
                     response_1.userResponse(res, 500, {
                         status: 500,
-                        message: error_11,
+                        message: error_13,
                         data: null
                     }, false);
                     return [3 /*break*/, 3];

@@ -193,7 +193,7 @@ function submitForm(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
+                    _a.trys.push([0, 8, , 9]);
                     return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             "select": {
                                 "domainNames": {
@@ -212,8 +212,7 @@ function submitForm(req, res) {
                         })];
                 case 1:
                     creator = _a.sent();
-                    if (!(creator.status == 200)) return [3 /*break*/, 8];
-                    console.log(mongoose_1.default.Types.ObjectId(req.params.formId.trim()));
+                    if (!(creator.status == 200)) return [3 /*break*/, 6];
                     return [4 /*yield*/, (0, formModel_1.default)(creator.data.data.userName).findById(mongoose_1.default.Types.ObjectId(req.params.formId.trim()))];
                 case 2:
                     form = _a.sent();
@@ -222,19 +221,16 @@ function submitForm(req, res) {
                         status: 404,
                         message: 'Form not found'
                     });
-                    return [3 /*break*/, 7];
+                    return [3 /*break*/, 5];
                 case 3:
                     data = __assign({}, req.body);
                     data.formId = req.params.formId;
                     return [4 /*yield*/, (0, formSubmissionModel_1.default)(creator.data.data.userName).create(data)];
                 case 4:
                     submission = _a.sent();
-                    if (!form.userMailTemplate) return [3 /*break*/, 6];
-                    return [4 /*yield*/, (0, sendMailController_1.sendMailOnFormResponse_user)(form.userMailTemplate, submission, creator.data.data)];
-                case 5:
-                    _a.sent();
-                    _a.label = 6;
-                case 6:
+                    if (form.userMailTemplate) {
+                        (0, sendMailController_1.sendMailOnFormResponse_user)(form.userMailTemplate, submission, creator.data.data);
+                    }
                     // if(form.creatorMailTemplate){
                     //     await sendMailOnFormResponse_creator(form.creatorMailTemplate,submission,creator.data.data);
                     // }
@@ -266,24 +262,24 @@ function submitForm(req, res) {
                             });
                         }
                     }
-                    _a.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
                     res.status(500).json({
                         status: 500,
                         message: 'Invalid Request'
                     });
-                    _a.label = 9;
-                case 9: return [3 /*break*/, 11];
-                case 10:
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     error_5 = _a.sent();
                     console.log(error_5);
                     res.status(500).json({
                         status: 500,
                         message: 'Internal Server Error'
                     });
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     });

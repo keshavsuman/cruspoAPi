@@ -80,10 +80,10 @@ exports.appointmentSchema = new mongoose_1.default.Schema({
 function appointmentModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_appointment");
+        model = mongoose_1.default.model("".concat(prefix, "_appointment"));
     }
     catch (_a) {
-        model = mongoose_1.default.model(prefix + "_appointment", exports.appointmentSchema);
+        model = mongoose_1.default.model("".concat(prefix, "_appointment"), exports.appointmentSchema);
     }
     return model;
 }

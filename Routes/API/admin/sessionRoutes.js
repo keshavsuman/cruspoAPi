@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var sessionController = __importStar(require("../../../controller/session/sessionController"));
-var sessionRoutes = express_1.Router();
+var sessionRoutes = (0, express_1.Router)();
 sessionRoutes.post('/getSessions', sessionController.getSessions);
 sessionRoutes.post('/getUpcomingSessions', sessionController.getUpcomingSessions);
 sessionRoutes.post('/getPastSessions', sessionController.getPastSessions);

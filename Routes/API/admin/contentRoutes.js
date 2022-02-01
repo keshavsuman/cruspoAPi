@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var contentController = __importStar(require("../../../controller/content/contentController"));
-var contentRoutes = express_1.Router();
+var contentRoutes = (0, express_1.Router)();
 contentRoutes.get('/getContentById', contentController.getContentById);
 contentRoutes.post('/getContents', contentController.getContents);
 contentRoutes.post('/createContent', contentController.createContent);

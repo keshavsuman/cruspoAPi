@@ -60,7 +60,7 @@ function bookAppointment(req, res) {
                 case 1:
                     creator = _a.sent();
                     console.log(creator.data);
-                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, appointmentsBookingModel_1.default)(res.get('userName')).create({
                             appointmentId: req.body.appointmentId,
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,

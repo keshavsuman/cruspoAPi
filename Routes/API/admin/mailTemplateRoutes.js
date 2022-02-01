@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var mailTemplateController = __importStar(require("../../../controller/mail/templateControllerAPI"));
-var mailTemplateRoutes = express_1.default();
+var mailTemplateRoutes = (0, express_1.default)();
 /**
  * request Body:
  *  {

@@ -48,7 +48,7 @@ function deleteLearner(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findByIdAndDelete(req.params.memberId)];
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).findByIdAndDelete(req.params.memberId)];
                 case 1:
                     _a.sent();
                     res.status(200).send();

@@ -21,6 +21,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var gotoController = __importStar(require("../controller/gotoController"));
-var goToPage = express_1.Router();
+var goToPage = (0, express_1.Router)();
 goToPage.get('/', gotoController.initGotoPage);
 module.exports = goToPage;

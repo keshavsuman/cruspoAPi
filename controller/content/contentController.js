@@ -60,7 +60,7 @@ function getContents(req, res) {
                     if (search) {
                         match.set('$or', [{ contentTitle: { $regex: search, $options: 'i' } }, { contentDescription: { $regex: search, $options: 'i' } }]);
                     }
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).aggregate([
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).aggregate([
                             {
                                 $match: match
                             }, {
@@ -109,7 +109,7 @@ function getContentById(req, res) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
                     if (!req.params.id) return [3 /*break*/, 2];
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     content = _a.sent();
                     res.status(200).send({
@@ -147,7 +147,7 @@ function createContent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).create({
                             contentTitle: req.body.contentTitle,
                             contentDescription: req.body.contentDescription,
                             contentThumbnail: req.body.contentThumbnail,
@@ -184,7 +184,7 @@ function updateContent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             contentTitle: req.body.contentTitle,
                             contentDescription: req.body.contentDescription,
                             contentThumbnail: req.body.contentThumbnail,
@@ -255,7 +255,7 @@ function deleteContent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.contentId, {
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.contentId, {
                             status: 'DELETED'
                         })];
                 case 1:
@@ -285,7 +285,7 @@ function deleteMultipleContent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).updateMany({
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).updateMany({
                             _id: { $in: req.body.contentIds }
                         }, {
                             contentStatus: 'deleted'
@@ -318,7 +318,7 @@ function getCollection(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     collections = _b.sent();
                     res.status(200).send({
@@ -349,14 +349,16 @@ function createCollection(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({
-                            collectionName: req.body.collectionName,
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).create({
+                            collectionTitle: req.body.collectionTitle,
                             collectionDescription: req.body.collectionDescription,
+                            collectionThumbnail: req.body.collectionThumbnail,
                             price: {
                                 currency: req.body.currency,
                                 amount: req.body.amount
                             },
                             status: req.body.status,
+                            content: req.body.content
                         })];
                 case 1:
                     collection = _a.sent();
@@ -383,14 +385,27 @@ function createCollection(req, res) {
 exports.createCollection = createCollection;
 function updateCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_10;
+        var collection, error_10;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.collectionId, {
+                            collectionTitle: req.body.collectionTitle,
+                            collectionDescription: req.body.collectionDescription,
+                            collectionThumbnail: req.body.collectionThumbnail,
+                            set: {
+                                price: req.body.price,
+                                currency: req.body.currency,
+                            },
+                        })];
                 case 1:
-                    _a.sent();
+                    collection = _a.sent();
+                    res.status(200).send({
+                        status: 200,
+                        message: "Collection Updated successfully",
+                        data: collection
+                    });
                     return [3 /*break*/, 3];
                 case 2:
                     error_10 = _a.sent();
@@ -414,7 +429,7 @@ function deleteCollection(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).create({})];
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).create({})];
                 case 1:
                     _a.sent();
                     return [3 /*break*/, 3];
@@ -440,7 +455,7 @@ function getCollectionById(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, collectionModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     _a.sent();
                     res.status(200).json({
@@ -472,10 +487,10 @@ function getContentsByUser(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
-                    return [4 /*yield*/, contentModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     contents = _b.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: "Contents fetched",
                         data: contents
@@ -484,7 +499,7 @@ function getContentsByUser(req, res) {
                 case 2:
                     error_13 = _b.sent();
                     console.log(error_13);
-                    response_1.userResponse(res, 500, {
+                    (0, response_1.userResponse)(res, 500, {
                         status: 500,
                         message: error_13,
                         data: null

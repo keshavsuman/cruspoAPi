@@ -50,16 +50,16 @@ function initGotoPage(req, res) {
         var courses, appointments, recommendations, events, userDetails;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, programModel_1.default(res.get('userName')).find({})];
+                case 0: return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({})];
                 case 1:
                     courses = _a.sent();
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find({ status: "PUBLISHED" })];
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).find({ status: "PUBLISHED" })];
                 case 2:
                     appointments = _a.sent();
                     return [4 /*yield*/, recommendModel_1.default.find({}).limit(20)];
                 case 3:
                     recommendations = _a.sent();
-                    return [4 /*yield*/, eventModel_1.default(res.get('userName')).find({})];
+                    return [4 /*yield*/, (0, eventModel_1.default)(res.get('userName')).find({})];
                 case 4:
                     events = _a.sent();
                     return [4 /*yield*/, axios_1.default.get('https://authentication.cruspo.com/creator/getCreator/' + process.env.userId)];
@@ -92,10 +92,10 @@ function initEditGotoPage(req, res) {
                 case 0: return [4 /*yield*/, axios_1.default.get('https://authentication.cruspo.com/creator/getCreator/' + process.env.userId)];
                 case 1:
                     userDetails = _a.sent();
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).find({})];
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({})];
                 case 2:
                     courses = _a.sent();
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find({})];
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).find({})];
                 case 3:
                     appointments = _a.sent();
                     return [4 /*yield*/, recommendModel_1.default.find()];

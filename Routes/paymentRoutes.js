@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 // import * as RazorPayController from '../controller/payment/razorpayController';
-var paymentRouter = express_1.Router();
+var paymentRouter = (0, express_1.Router)();
 // paymentRouter.get('/coursePayment/1999',async (req,res)=>{
 //     var priceInSmallestUnit = 1999 * 100;
 //         var metaData = new Map<String,any>();

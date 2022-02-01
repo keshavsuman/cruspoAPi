@@ -46,6 +46,6 @@ var eventModelSchema = new mongoose_1.default.Schema({
         }],
 });
 function eventModel(prefix) {
-    return mongoose_1.default.model(prefix + "_event", eventModelSchema);
+    return mongoose_1.default.model("".concat(prefix, "_event"), eventModelSchema);
 }
 exports.default = eventModel;

@@ -30,10 +30,10 @@ exports.moduleSchema = new mongoose_1.default.Schema({
 function moduleModel(prefix) {
     var module;
     try {
-        module = mongoose_1.default.model(prefix + "_module", exports.moduleSchema);
+        module = mongoose_1.default.model("".concat(prefix, "_module"), exports.moduleSchema);
     }
     catch (error) {
-        module = mongoose_1.default.model(prefix + "_module", exports.moduleSchema);
+        module = mongoose_1.default.model("".concat(prefix, "_module"), exports.moduleSchema);
     }
     return module;
 }

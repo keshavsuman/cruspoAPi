@@ -39,6 +39,6 @@ var fileSchema = new mongoose_1.default.Schema({
     }
 });
 function fileModel(prefix) {
-    return mongoose_1.default.model(prefix + "_files", fileSchema);
+    return mongoose_1.default.model("".concat(prefix, "_files"), fileSchema);
 }
 exports.default = fileModel;

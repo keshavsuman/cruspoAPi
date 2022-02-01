@@ -50,7 +50,7 @@ var authenticationRoutes = require("./authenticationRoutes");
 var programRoutes = require("./programRoutes");
 var liveSessionsRoutes = require('./liveSessionsRoutes');
 var contentRoutes = require('./contentRoutes');
-var learnerRouter = express_1.Router();
+var learnerRouter = (0, express_1.Router)();
 learnerRouter.use('/auth', authenticationRoutes);
 learnerRouter.use('/program', programRoutes);
 learnerRouter.use('/content', contentRoutes);
@@ -82,25 +82,25 @@ learnerRouter.post('/page', function (req, res) { return __awaiter(void 0, void 
             case 1:
                 response = _b.sent();
                 creator = response.data.data;
-                return [4 /*yield*/, programModel_1.default(creator.userName).find({
+                return [4 /*yield*/, (0, programModel_1.default)(creator.userName).find({
                         status: 'PUBLISHED'
                     }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
             case 2:
                 programs = _b.sent();
-                return [4 /*yield*/, contentModel_1.default(creator.userName).find().limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                return [4 /*yield*/, (0, contentModel_1.default)(creator.userName).find().limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
             case 3:
                 contents = _b.sent();
-                return [4 /*yield*/, appointmentModel_1.default(creator.userName).find({
+                return [4 /*yield*/, (0, appointmentModel_1.default)(creator.userName).find({
                         status: 'PUBLISHED'
                     }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
             case 4:
                 appointments = _b.sent();
-                return [4 /*yield*/, sessionModel_1.default(creator.userName).find({
+                return [4 /*yield*/, (0, sessionModel_1.default)(creator.userName).find({
                         status: 'PUBLISHED'
                     }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
             case 5:
                 sessions = _b.sent();
-                response_1.userResponse(res, 200, {
+                (0, response_1.userResponse)(res, 200, {
                     status: 200,
                     message: "Page details",
                     data: {
@@ -115,7 +115,7 @@ learnerRouter.post('/page', function (req, res) { return __awaiter(void 0, void 
             case 6:
                 error_1 = _b.sent();
                 console.log(error_1);
-                response_1.userResponse(res, 500, {
+                (0, response_1.userResponse)(res, 500, {
                     status: 500,
                     message: error_1,
                     data: null

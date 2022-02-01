@@ -18,17 +18,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var programController = __importStar(require("../../../controller/learnerController/programController"));
-var learnAuthMiddleware_1 = __importDefault(require("../../../middlewares/learnAuthMiddleware"));
-var program = express_1.Router();
-program.use(learnAuthMiddleware_1.default);
-program.get('/', programController.getPrograms);
-program.get('/getPurchasedCourse', programController.getPurchasedProgram);
-program.get('/:courseId', programController.getProgramById);
+// import learnerAuthentication from '../../../middlewares/learnAuthMiddleware';
+var program = (0, express_1.Router)();
+// program.use(learnerAuthentication);
+// program.get('/',programController.getPrograms);
+// program.get('/getPurchasedCourse',programController.getPurchasedProgram);
+// program.get('/:courseId',programController.getProgramById);
 // program.post('/purchaseCourse',programController.purchaseProgram);
 module.exports = programController;

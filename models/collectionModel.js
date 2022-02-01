@@ -11,6 +11,9 @@ var collectionSchema = new mongoose_1.default.Schema({
     collectionDescription: {
         type: String
     },
+    collectionThumbnail: {
+        type: String
+    },
     price: {
         type: {
             currency: {
@@ -33,10 +36,10 @@ var collectionSchema = new mongoose_1.default.Schema({
 function collectionModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_collections");
+        model = mongoose_1.default.model("".concat(prefix, "_collections"));
     }
     catch (error) {
-        model = mongoose_1.default.model(prefix + "_collections", collectionSchema);
+        model = mongoose_1.default.model("".concat(prefix, "_collections"), collectionSchema);
     }
     return model;
 }

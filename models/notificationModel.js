@@ -23,6 +23,6 @@ exports.notificationSchema = new mongoose_1.default.Schema({
     }
 });
 function notificationModel(prefix) {
-    return mongoose_1.default.model(prefix + "_notification", exports.notificationSchema);
+    return mongoose_1.default.model("".concat(prefix, "_notification"), exports.notificationSchema);
 }
 exports.default = notificationModel;

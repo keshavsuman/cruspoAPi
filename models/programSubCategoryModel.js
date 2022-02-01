@@ -18,6 +18,6 @@ var subCategorySchema = new mongoose_1.default.Schema({
     }
 });
 function programSubCategoryModel(prefix) {
-    return mongoose_1.default.model(prefix + "_subCategory", subCategorySchema);
+    return mongoose_1.default.model("".concat(prefix, "_subCategory"), subCategorySchema);
 }
 exports.default = programSubCategoryModel;

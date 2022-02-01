@@ -48,7 +48,7 @@ function createEvent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, eventModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, eventModel_1.default)(res.get('userName')).create({
                             'eventTitle': req.body.eventTitle,
                             'eventDescription': req.body.eventDescription,
                             'eventThumbnail': req.body.eventThumbnail,
@@ -84,7 +84,7 @@ function updateEvent(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, eventModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
+                    return [4 /*yield*/, (0, eventModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
                             'eventTitle': req.body.sessionTitle,
                             'eventDescription': req.body.sessionDescription,
                             'startDate': req.body.startDate,
@@ -115,7 +115,7 @@ function deleteEvent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             try {
-                eventModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.eventId, {
+                (0, eventModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.eventId, {
                     status: 'DELETED'
                 });
                 res.status(200).send();
@@ -136,7 +136,7 @@ function getEventById(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, eventModel_1.default(res.get('userName')).findById(req.params.eventId)];
+                    return [4 /*yield*/, (0, eventModel_1.default)(res.get('userName')).findById(req.params.eventId)];
                 case 1:
                     event = _a.sent();
                     if (event) {
@@ -167,7 +167,7 @@ function getAllEvents(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, eventModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, eventModel_1.default)(res.get('userName')).find({
                             status: "ACTIVE",
                         })];
                 case 1:

@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var contentController = __importStar(require("../../../controller/content/contentController"));
 var learnAuthMiddleware_1 = require("../../../middlewares/learnAuthMiddleware");
-var contentRoutes = express_1.Router();
+var contentRoutes = (0, express_1.Router)();
 contentRoutes.use(learnAuthMiddleware_1.auth);
 contentRoutes.post('/getContents', contentController.getContentsByUser);
 module.exports = contentRoutes;

@@ -35,48 +35,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createSession = exports.createEvent = void 0;
-var liveSessions_1 = __importDefault(require("../models/liveSessions"));
+// import liveSessions from '../models/liveSessions';
 function createEvent(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var startDateArray, eventStartTimeArray, startTime, endDateArray, eventEndTimeArray, endTime, error_1;
+        var startDateArray, eventStartTimeArray, startTime, endDateArray, eventEndTimeArray, endTime;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    console.log(req.body);
-                    startDateArray = req.body.eventStartDate.split('-');
-                    eventStartTimeArray = req.body.eventStartTime.split(':');
-                    startTime = new Date(startDateArray[0], startDateArray[1], startDateArray[2], eventStartTimeArray[0], eventStartTimeArray[1]);
-                    endDateArray = req.body.eventEndDate.split('-');
-                    eventEndTimeArray = req.body.eventEndTime.split(':');
-                    endTime = new Date(endDateArray[0], endDateArray[1], endDateArray[2], eventEndTimeArray[0], eventEndTimeArray[1]);
-                    return [4 /*yield*/, liveSessions_1.default(res.get('userName')).create({
-                            'sessionType': 'EVENT',
-                            'sessionTitle': req.body.eventTitle,
-                            'sessionDescription': req.body.eventDescription,
-                            'startDate': req.body.eventStartDate,
-                            'endDate': req.body.eventEndDate,
-                            'startTime': startTime,
-                            'endTime': endTime,
-                            'eventPrice': req.body.eventPrice,
-                            'currency': req.body.currency
-                        })];
-                case 1:
-                    _a.sent();
-                    res.redirect('/admin/live/');
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.log(error_1);
-                    res.redirect('/admin/live/');
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+            try {
+                console.log(req.body);
+                startDateArray = req.body.eventStartDate.split('-');
+                eventStartTimeArray = req.body.eventStartTime.split(':');
+                startTime = new Date(startDateArray[0], startDateArray[1], startDateArray[2], eventStartTimeArray[0], eventStartTimeArray[1]);
+                endDateArray = req.body.eventEndDate.split('-');
+                eventEndTimeArray = req.body.eventEndTime.split(':');
+                endTime = new Date(endDateArray[0], endDateArray[1], endDateArray[2], eventEndTimeArray[0], eventEndTimeArray[1]);
+                // await liveSessions(res.get('userName')).create({
+                //     'sessionType':'EVENT',
+                //     'sessionTitle':req.body.eventTitle,
+                //     'sessionDescription':req.body.eventDescription,
+                //     'startDate':req.body.eventStartDate,
+                //     'endDate':req.body.eventEndDate,
+                //     'startTime':startTime,
+                //     'endTime':endTime,
+                //     'eventPrice':req.body.eventPrice,
+                //     'currency':req.body.currency
+                // });
+                res.redirect('/admin/live/');
             }
+            catch (error) {
+                console.log(error);
+                res.redirect('/admin/live/');
+            }
+            return [2 /*return*/];
         });
     });
 }

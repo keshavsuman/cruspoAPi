@@ -18,6 +18,6 @@ exports.groupSchema = new mongoose_1.default.Schema({
     timestamps: true
 });
 function groupModel(prefix) {
-    return mongoose_1.default.model(prefix + "_group", exports.groupSchema);
+    return mongoose_1.default.model("".concat(prefix, "_group"), exports.groupSchema);
 }
 exports.default = groupModel;

@@ -47,7 +47,7 @@ function dashboard(req, res) {
         var creator, today, courses, sessions, appointments, gotopageURL, members, courses, sessions, appointments, gotopageURL, members;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, authenticationController_1.getCreator(String(process.env.userId))];
+                case 0: return [4 /*yield*/, (0, authenticationController_1.getCreator)(String(process.env.userId))];
                 case 1:
                     creator = _a.sent();
                     today = new Date();

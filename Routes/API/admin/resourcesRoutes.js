@@ -21,8 +21,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var resourceController = __importStar(require("../../../controller/resource/resourceController"));
-var resourceRoutes = express_1.Router();
-// resourceRoutes.get('/getFileUploadLink/:fileName',resourceController.getFileUploadURL);
+var resourceRoutes = (0, express_1.Router)();
+resourceRoutes.get('/getFileUploadLink/:fileName', resourceController.getFileUploadURL);
 resourceRoutes.post('/registerUploadedFile', resourceController.createFileEntry);
 resourceRoutes.get('/getFoldersList', resourceController.getFolders);
 resourceRoutes.get('/getFiles', resourceController.getFiles);

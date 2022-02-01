@@ -44,11 +44,11 @@ var ProgramSchema = function (prefix) { return new mongoose_1.default.Schema({
     },
     programCategory: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_programCategory"
+        ref: "".concat(prefix, "_programCategory")
     },
     programSubCategory: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_subCategory"
+        ref: "".concat(prefix, "_subCategory")
     },
     isPaid: {
         type: Boolean,
@@ -57,12 +57,12 @@ var ProgramSchema = function (prefix) { return new mongoose_1.default.Schema({
     modules: {
         type: [{
                 type: mongoose_1.default.Schema.Types.ObjectId,
-                ref: prefix + "_module"
+                ref: "".concat(prefix, "_module")
             }],
     },
     batches: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: prefix + "_batch"
+            ref: "".concat(prefix, "_batch")
         }],
     feeDetails: {
         type: feeDetailsSchema
@@ -84,10 +84,10 @@ var ProgramSchema = function (prefix) { return new mongoose_1.default.Schema({
 function programModel(prefix) {
     var program;
     try {
-        program = mongoose_1.default.model(prefix + "_program");
+        program = mongoose_1.default.model("".concat(prefix, "_program"));
     }
     catch (_a) {
-        program = mongoose_1.default.model(prefix + "_program", ProgramSchema(prefix));
+        program = mongoose_1.default.model("".concat(prefix, "_program"), ProgramSchema(prefix));
     }
     return program;
 }

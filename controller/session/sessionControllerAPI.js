@@ -49,7 +49,7 @@ function createSession(req, res) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     console.log(req.body);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).create({
                             'sessionTitle': req.body.sessionTitle,
                             'sessionDescription': req.body.sessionDescription,
                             'startDate': req.body.startDate,
@@ -79,7 +79,7 @@ function updateSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             try {
-                sessionModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
+                (0, sessionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
                     'sessionTitle': req.body.sessionTitle,
                     'sessionDescription': req.body.sessionDescription,
                     'startDate': req.body.startDate,
@@ -107,7 +107,7 @@ function deleteSession(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
                             status: 'DELETED'
                         })];
                 case 1:
@@ -134,7 +134,7 @@ function getSessions(req, res) {
                     _a.trys.push([0, 5, , 6]);
                     sessions = [];
                     if (!(req.params.type == "upcoming")) return [3 /*break*/, 2];
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).find({
                             status: 'ACTIVE',
                             startDate: { $gte: new Date(Date.now()) }
                         }).limit(50)];
@@ -143,7 +143,7 @@ function getSessions(req, res) {
                     return [3 /*break*/, 4];
                 case 2:
                     if (!(req.params.type == "past")) return [3 /*break*/, 4];
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).find({
                             status: 'ACTIVE',
                             startDate: { $lte: new Date(Date.now()) }
                         }).limit(50)];
@@ -171,7 +171,7 @@ function getSessionById(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findById(req.params.sessionId)];
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).findById(req.params.sessionId)];
                 case 1:
                     session = _a.sent();
                     if (session) {

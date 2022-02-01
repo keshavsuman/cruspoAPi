@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var programController = __importStar(require("../../../controller/program/programController"));
 var learnAuthMiddleware_1 = require("../../../middlewares/learnAuthMiddleware");
-var program = express_1.Router();
+var program = (0, express_1.Router)();
 program.use(learnAuthMiddleware_1.auth);
 program.post('/getPrograms', programController.getUserPrograms);
 program.get('/:id', programController.getProgramById);

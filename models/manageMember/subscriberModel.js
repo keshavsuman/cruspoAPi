@@ -28,17 +28,17 @@ var userSchema = function (prefix) { return new mongoose_1.default.Schema({
         // required:true   
     },
     programsPurchased: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_program" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_program") }]
     },
     batchesJoined: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_batch" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_batch") }]
     },
     // userRefId:{
     //     type:mongoose.Schema.Types.ObjectId,
     //     required:true
     // },
     groupsJoined: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: prefix + "_group" }]
+        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_group") }]
     },
     contactDetails: {
         type: {
@@ -65,10 +65,10 @@ var userStatus;
 function subscriberModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_subscriber");
+        model = mongoose_1.default.model("".concat(prefix, "_subscriber"));
     }
     catch (err) {
-        model = mongoose_1.default.model(prefix + "_subscriber", userSchema(prefix));
+        model = mongoose_1.default.model("".concat(prefix, "_subscriber"), userSchema(prefix));
     }
     return model;
 }

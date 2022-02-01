@@ -57,10 +57,10 @@ var BatchSchema = new mongoose_1.default.Schema({
 function batchModel(prefix) {
     var batch;
     try {
-        batch = mongoose_1.default.model(prefix + "_batch");
+        batch = mongoose_1.default.model("".concat(prefix, "_batch"));
     }
     catch (_a) {
-        batch = mongoose_1.default.model(prefix + "_batch", BatchSchema);
+        batch = mongoose_1.default.model("".concat(prefix, "_batch"), BatchSchema);
     }
     return batch;
 }

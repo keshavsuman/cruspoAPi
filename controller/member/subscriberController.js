@@ -80,7 +80,7 @@ function getSubscribers(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, sort = _a.sort, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName'))
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName'))
                             .find(__assign(__assign({}, select), { status: { $in: ['ACTIVE', 'DEACTIVE'] } }), project).sort(sort !== null && sort !== void 0 ? sort : {})
                             .limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
@@ -112,7 +112,7 @@ function deleteSubscriber(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             status: subscriberModel_1.userStatus.DELETED
                         })];
                 case 1:
@@ -144,13 +144,13 @@ function updateSubscriber(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     learner = _a.sent();
                     if (!learner) return [3 /*break*/, 3];
                     delete req.body.password;
                     delete req.body.email;
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findByIdAndUpdate(learner._id, req.body)];
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).findByIdAndUpdate(learner._id, req.body)];
                 case 2:
                     _a.sent();
                     res.status(200).json({
@@ -189,7 +189,7 @@ function createSubscriber(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).find({
                             email: req.body.email
                         })];
                 case 1:
@@ -242,7 +242,7 @@ function createSubscriber(req, res) {
                 //     }
                 // });
                 // if(response.status===201){
-                return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).create({
+                return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).create({
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
                         email: req.body.email,
@@ -316,7 +316,7 @@ function createGroup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).create({
                             groupName: req.body.groupName
                         })];
                 case 1:
@@ -351,11 +351,11 @@ function updateGroup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     group = _a.sent();
                     if (!group) return [3 /*break*/, 3];
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).findByIdAndUpdate(group._id, req.body)];
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).findByIdAndUpdate(group._id, req.body)];
                 case 2:
                     _a.sent();
                     res.status(200).send({
@@ -392,7 +392,7 @@ function getGroups(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).find(__assign(__assign({}, select), { status: { $nin: ['DELETED'] } }), project).skip(skip !== null && skip !== void 0 ? skip : 0).limit(limit !== null && limit !== void 0 ? limit : 20)];
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).find(__assign(__assign({}, select), { status: { $nin: ['DELETED'] } }), project).skip(skip !== null && skip !== void 0 ? skip : 0).limit(limit !== null && limit !== void 0 ? limit : 20)];
                 case 1:
                     groups = _b.sent();
                     res.send({
@@ -421,7 +421,7 @@ function deleteGroup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             status: "DELETED"
                         })];
                 case 1:

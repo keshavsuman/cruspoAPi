@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var eventControllerAPI = __importStar(require("../../../controller/event/eventControllerAPI"));
-var eventRoutes = express_1.Router();
+var eventRoutes = (0, express_1.Router)();
 eventRoutes.get('/:eventId', eventControllerAPI.getEventById);
 eventRoutes.post('/createEvent', eventControllerAPI.createEvent);
 eventRoutes.patch('/updateEvent/:eventId', eventControllerAPI.updateEvent);

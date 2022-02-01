@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -63,7 +44,6 @@ var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var axios_1 = __importDefault(require("axios"));
-var mailSender = __importStar(require("./mail/sendMailController"));
 dotenv_1.default.config();
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -158,15 +138,25 @@ function forgetPassword(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/forgetPassword', {
-                            email: req.body.email
+                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
+                            "select": {
+                                "domainNames": {
+                                    "$in": [req.headers.cruspohost]
+                                },
+                                "email": req.body.email
+                            },
+                            "project": {
+                                "_id": 1,
+                                "userName": 1
+                            }
                         }, {
-                        // headers:{
-                        //     'Content-Type':'application/x-www-form-urlencoded'
-                        // }
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
                         })];
                 case 1:
                     responseData = _a.sent();
+                    // console.log(responseData.data);
                     if (responseData.status == 201) {
                         if (responseData.data == 'USER_NOT_FOUND') {
                             res.render('forgot-password', {
@@ -180,8 +170,8 @@ function forgetPassword(req, res) {
                                 expiresIn: 60 * 60
                             });
                             link = req.protocol + '://' + req.hostname + '/authentication/resetpassword/' + token;
-                            mailSender.sendResetPasswordMailToCreator(req.body.email, link);
-                            res.redirect('/authentication/resetPassword');
+                            // mailSender.sendResetPasswordMailToCreator(req.body.email, link);
+                            // res.redirect('/authentication/resetPassword');
                         }
                     }
                     else {
@@ -241,7 +231,7 @@ function getCreator(creatorId) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     url = "https://authentication.cruspo.com/creator/getCreator/" + creatorId;
-                    return [4 /*yield*/, axios_1.default({
+                    return [4 /*yield*/, (0, axios_1.default)({
                             url: url,
                             method: "GET",
                         })];

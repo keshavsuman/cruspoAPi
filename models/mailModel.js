@@ -16,6 +16,6 @@ var mailSchema = new mongoose_1.default.Schema({
     },
 });
 function mailModel(prefix) {
-    return mongoose_1.default.model(prefix + "_mail", mailSchema);
+    return mongoose_1.default.model("".concat(prefix, "_mail"), mailSchema);
 }
 exports.default = mailModel;

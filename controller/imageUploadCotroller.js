@@ -12,8 +12,8 @@ var s3 = new aws_sdk_1.default.S3({
     secretAccessKey: process.env.AWSSecretKey,
     region: 'ap-south-1'
 });
-exports.multerUpload = multer_1.default({
-    storage: multer_s3_1.default({
+exports.multerUpload = (0, multer_1.default)({
+    storage: (0, multer_s3_1.default)({
         s3: s3,
         bucket: 'cruspothumbnails',
         acl: 'public-read',

@@ -39,21 +39,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSubCategories = exports.getCategories = exports.deleteBatch = exports.updateBatch = exports.getBatch = exports.createBatch = exports.getProgramById = exports.getPrograms = exports.deleteprogram = exports.updatedprogram = exports.createProgram = void 0;
+exports.getSubCategories = exports.getCategories = exports.deleteBatch = exports.updateBatch = exports.createBatch = exports.getProgramById = exports.getPrograms = exports.deleteprogram = exports.updatedprogram = exports.createProgram = void 0;
 var batchModel_1 = __importDefault(require("../../models/batchModel"));
 var programCategoryModel_1 = __importDefault(require("../../models/programCategoryModel"));
 var programSubCategoryModel_1 = __importDefault(require("../../models/programSubCategoryModel"));
 var programModel_1 = __importDefault(require("../../models/programModel"));
 var errorModel_1 = __importDefault(require("../../models/errorModel"));
 var mongoose_1 = __importDefault(require("mongoose"));
+var moduleModel_1 = __importDefault(require("../../models/moduleModel"));
 function createProgram(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var newCategory, program, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).create({
+                    _a.trys.push([0, 5, , 6]);
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).create({
                             'programTitle': req.body.programTitle,
                             'programThumbnail': req.body.programThumbnail,
                             'programDescription': req.body.programDescription,
@@ -70,20 +71,23 @@ function createProgram(req, res) {
                         })];
                 case 1:
                     program = _a.sent();
-                    // if(req.body.newCategory)
-                    // {
-                    //     newCategory = await programCategoryModel(res.get('userName')).create({
-                    //         categoryName:req.body.newCategory
-                    //     });
-                    //     program.programCategory = req.body.newCategory;
-                    //     program.save();
-                    // }else{
-                    //     program.programCategory = req.body.programCategory;
-                    //     program.save();
-                    // }
-                    res.status(201).send();
-                    return [3 /*break*/, 3];
+                    if (!req.body.newCategory) return [3 /*break*/, 3];
+                    return [4 /*yield*/, (0, programCategoryModel_1.default)(res.get('userName')).create({
+                            categoryName: req.body.newCategory
+                        })];
                 case 2:
+                    newCategory = _a.sent();
+                    program.programCategory = req.body.newCategory;
+                    program.save();
+                    return [3 /*break*/, 4];
+                case 3:
+                    program.programCategory = req.body.programCategory;
+                    program.save();
+                    _a.label = 4;
+                case 4:
+                    res.status(201).send();
+                    return [3 /*break*/, 6];
+                case 5:
                     error_1 = _a.sent();
                     if (process.env.ENVIORMENT == 'development') {
                         console.log(error_1);
@@ -96,8 +100,8 @@ function createProgram(req, res) {
                         });
                     }
                     res.status(403).send(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -111,7 +115,7 @@ function updatedprogram(req, res) {
             switch (_m.label) {
                 case 0:
                     _m.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.programId)];
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findById(req.params.programId)];
                 case 1:
                     program = _m.sent();
                     if (!program) return [3 /*break*/, 3];
@@ -194,7 +198,7 @@ function deleteprogram(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.programId, {
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.programId, {
                             status: "DELETED"
                         })];
                 case 1:
@@ -228,7 +232,7 @@ function getPrograms(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({
                             status: { $in: ['PUBLISHED', 'UNPUBLISHED', 'DRAFT', 'EXPIRED'] }
                         })];
                 case 1:
@@ -262,7 +266,7 @@ function getProgramById(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.id)
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findById(req.params.id)
                             .populate('batches')
                             .populate('modules')];
                 case 1:
@@ -272,8 +276,8 @@ function getProgramById(req, res) {
                 case 2:
                     error_5 = _a.sent();
                     if (error_5.name === 'MissingSchemaError') {
-                        batchModel_1.default(res.get('userName')).createCollection();
-                        // moduleModel(res.get('userName')).createCollection();
+                        (0, batchModel_1.default)(res.get('userName')).createCollection();
+                        (0, moduleModel_1.default)(res.get('userName')).createCollection();
                     }
                     res.status(500).send(error_5);
                     return [3 /*break*/, 3];
@@ -291,7 +295,7 @@ function createBatch(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).create({
                             batchTitle: req.body.batchTitle,
                             batchDescription: req.body.batchDescription,
                             // timingTitle:'',
@@ -304,7 +308,7 @@ function createBatch(req, res) {
                         })];
                 case 1:
                     batch = _a.sent();
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.programId, {
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.programId, {
                             $addToSet: { 'batches': batch._id }
                         })];
                 case 2:
@@ -331,19 +335,6 @@ function createBatch(req, res) {
     });
 }
 exports.createBatch = createBatch;
-function getBatch(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            try {
-            }
-            catch (error) {
-                console.log(error);
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-exports.getBatch = getBatch;
 function updateBatch(req, res) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
@@ -352,7 +343,7 @@ function updateBatch(req, res) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).findById(req.params.batchId)];
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).findById(req.params.batchId)];
                 case 1:
                     batch = _c.sent();
                     if (batch) {
@@ -404,7 +395,7 @@ function deleteBatch(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.batchId, { status: "DELETED" })];
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.batchId, { status: "DELETED" })];
                 case 1:
                     _a.sent();
                     res.status(201).send();
@@ -436,7 +427,7 @@ function getCategories(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programCategoryModel_1.default(res.get('userName')).find()];
+                    return [4 /*yield*/, (0, programCategoryModel_1.default)(res.get('userName')).find()];
                 case 1:
                     categories = _a.sent();
                     res.status(200).send(categories);
@@ -459,7 +450,7 @@ function getSubCategories(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programSubCategoryModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, programSubCategoryModel_1.default)(res.get('userName')).find({
                             programCategory: new mongoose_1.default.Schema.Types.ObjectId(req.params.categoryId)
                         })];
                 case 1:

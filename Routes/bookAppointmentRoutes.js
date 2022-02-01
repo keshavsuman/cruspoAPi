@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var appointmentModel_1 = __importDefault(require("../models/appointmentModel"));
-var bookAppointment = express_1.Router();
+var bookAppointment = (0, express_1.Router)();
 // bookAppointment.get('/:id',async (req:Request,res:Response)=>{
 //     try {
 //     var appointment = await appointmentModel('keshavsuman').findById(req.params.id);
@@ -61,7 +61,7 @@ bookAppointment.get('/book/:appointmentId', function (req, res) { return __await
     var appointment;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, appointmentModel_1.default('keshavsuman').findById(req.params.appointmentId)];
+            case 0: return [4 /*yield*/, (0, appointmentModel_1.default)('keshavsuman').findById(req.params.appointmentId)];
             case 1:
                 appointment = _a.sent();
                 if (appointment == null) {

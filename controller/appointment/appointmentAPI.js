@@ -49,7 +49,7 @@ function getAppointment(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findById(req.params.id).populate('currency')];
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).findById(req.params.id).populate('currency')];
                 case 1:
                     appointment = _a.sent();
                     if (appointment) {
@@ -77,7 +77,7 @@ function allAppointment(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).find({}).populate('currency')];
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).find({}).populate('currency')];
                 case 1:
                     appointments = _a.sent();
                     res.status(200).send(appointments);
@@ -114,7 +114,7 @@ function getBookedAppointments(req, res) {
                     else {
                         res.status(406).send('Invalid Type');
                     }
-                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).aggregate([{
+                    return [4 /*yield*/, (0, appointmentsBookingModel_1.default)(res.get('userName')).aggregate([{
                                 $match: {
                                     $expr: body
                                 },
@@ -160,7 +160,7 @@ function bookAppointment(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, appointmentsBookingModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, appointmentsBookingModel_1.default)(res.get('userName')).create({
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
@@ -193,7 +193,7 @@ function createAppointments(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).create({
                             'status': 'DRAFT',
                             'appointmentTitle': req.body.appointmentTitle,
                             'appointmentThumbnail': req.body.appointmentThumbnail,
@@ -228,7 +228,7 @@ function updateAppointment(req, res) {
             switch (_g.label) {
                 case 0:
                     _g.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findById(req.body.appointmentId)];
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).findById(req.body.appointmentId)];
                 case 1:
                     appointment = _g.sent();
                     if (!appointment) return [3 /*break*/, 3];
@@ -277,7 +277,7 @@ function deleteAppointment(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, appointmentModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                    return [4 /*yield*/, (0, appointmentModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             'status': 'DELETED'
                         })];
                 case 1:

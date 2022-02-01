@@ -21,6 +21,6 @@ var folderSchema = new mongoose_1.default.Schema({
     }
 });
 function folderModel(prefix) {
-    return mongoose_1.default.model(prefix + "_folder", folderSchema);
+    return mongoose_1.default.model("".concat(prefix, "_folder"), folderSchema);
 }
 exports.default = folderModel;

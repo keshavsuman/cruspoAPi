@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var mediaController = __importStar(require("../../../controller/media/mediaController"));
-var mediaRoutes = express_1.Router();
+var mediaRoutes = (0, express_1.Router)();
 mediaRoutes.get('/getFileUploadLink/:fileName', mediaController.getFileUploadURL);
 mediaRoutes.post('/registerUploadedFile', mediaController.createFileEntry);
 mediaRoutes.get('/getFoldersList', mediaController.getFolders);

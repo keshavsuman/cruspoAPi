@@ -48,7 +48,7 @@ function createTemplate(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, mailTemplateModel_1.default)(res.get('userName')).create({
                             templateName: req.body.templateName,
                             subject: req.body.subject,
                             body: req.body.body,
@@ -82,7 +82,7 @@ function deleteTemplate(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).findByIdAndDelete(req.params.templateId)];
+                    return [4 /*yield*/, (0, mailTemplateModel_1.default)(res.get('userName')).findByIdAndDelete(req.params.templateId)];
                 case 1:
                     _a.sent();
                     res.status(201).json({
@@ -111,11 +111,11 @@ function updateTemplate(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).findById(req.params.templateId)];
+                    return [4 /*yield*/, (0, mailTemplateModel_1.default)(res.get('userName')).findById(req.params.templateId)];
                 case 1:
                     template = _a.sent();
                     if (!template) return [3 /*break*/, 3];
-                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.templateId, req.body)];
+                    return [4 /*yield*/, (0, mailTemplateModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.templateId, req.body)];
                 case 2:
                     _a.sent();
                     // template.set('templateName',req.body.templateName);
@@ -156,7 +156,7 @@ function getMailTemplates(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, mailTemplateModel_1.default(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, mailTemplateModel_1.default)(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     templates = _b.sent();
                     res.status(200).json({

@@ -14,21 +14,41 @@ exports.sessionSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    sessionThumbnail: {
+        type: String,
+    },
     startDate: {
         type: Date,
         required: true
     },
-    // startTime: {
-    //     type : String,
-    //     required:true
-    // },
-    // duration:{ 
-    //     type:{
-    //         hours:{type:Number},
-    //         minutes:{type:Number},
-    //     },
-    //     required:true
-    // },
+    startTime: {
+        type: Date,
+        required: true
+    },
+    endTime: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        required: true
+    },
+    duration: {
+        type: {
+            hours: { type: Number },
+            minutes: { type: Number },
+        },
+        required: true
+    },
+    isPaid: {
+        type: Boolean,
+    },
+    price: {
+        type: Number,
+    },
+    currency: {
+        type: String,
+    },
     notifyViaEmail: {
         type: Boolean,
         default: false
@@ -43,6 +63,6 @@ exports.sessionSchema = new mongoose_1.default.Schema({
     },
 }, { timestamps: true });
 function sessionModel(prefix) {
-    return mongoose_1.default.model(prefix + "_session", exports.sessionSchema);
+    return mongoose_1.default.model("".concat(prefix, "_session"), exports.sessionSchema);
 }
 exports.default = sessionModel;

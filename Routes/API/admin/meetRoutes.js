@@ -62,7 +62,7 @@ var axios_1 = __importDefault(require("axios"));
 //         console.log(token);
 //     }
 // );
-var meetRoutes = express_1.Router();
+var meetRoutes = (0, express_1.Router)();
 meetRoutes.post('/createRoom', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var roomOptions, error_1;
     return __generator(this, function (_a) {

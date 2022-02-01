@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signup = exports.login = void 0;
+exports.forgetPassword = exports.signup = exports.login = void 0;
 var subscriberModel_1 = __importDefault(require("../../models/manageMember/subscriberModel"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var axios_1 = __importDefault(require("axios"));
@@ -69,19 +69,19 @@ function login(req, res) {
                 case 1:
                     response = _a.sent();
                     if (response.data.status != 200) {
-                        response_1.userResponse(res, 403, {
+                        (0, response_1.userResponse)(res, 403, {
                             status: 403,
                             message: 'Bad request',
                         }, false);
                         return [2 /*return*/];
                     }
                     if (!(response.status == 200)) return [3 /*break*/, 3];
-                    return [4 /*yield*/, subscriberModel_1.default(response.data.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(response.data.data.userName).findOne({ email: req.body.email }, { firstName: 1, lastName: 1, email: 1, password: 1 })];
                 case 2:
                     learner = _a.sent();
                     if (learner) {
                         if (!bcryptjs_1.default.compareSync(req.body.password, learner.password)) {
-                            response_1.userResponse(res, 200, {
+                            (0, response_1.userResponse)(res, 200, {
                                 status: 200,
                                 message: "PASSWORD_INCORRECT",
                                 data: null
@@ -99,7 +99,7 @@ function login(req, res) {
                         }, String('secret'), {
                             expiresIn: 60 * 60 * 24
                         });
-                        response_1.userResponse(res, 200, {
+                        (0, response_1.userResponse)(res, 200, {
                             status: 200,
                             message: "LOGIN_SUCCESSFULL",
                             data: {
@@ -113,7 +113,7 @@ function login(req, res) {
                         }, true);
                     }
                     else {
-                        response_1.userResponse(res, 200, {
+                        (0, response_1.userResponse)(res, 200, {
                             status: 200,
                             message: "User doesn't exits",
                             data: null
@@ -124,7 +124,7 @@ function login(req, res) {
                 case 4:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    response_1.userResponse(res, 500, {
+                    (0, response_1.userResponse)(res, 500, {
                         status: 500,
                         message: error_1
                     }, false);
@@ -157,11 +157,11 @@ function signup(req, res) {
                         })];
                 case 1:
                     creator = _a.sent();
-                    return [4 /*yield*/, subscriberModel_1.default(creator.data.data.userName).findOne({ email: req.body.email })];
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(creator.data.data.userName).findOne({ email: req.body.email })];
                 case 2:
                     user = _a.sent();
                     if (!user) return [3 /*break*/, 3];
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: "User with this Email Already exists",
                         data: null
@@ -173,7 +173,7 @@ function signup(req, res) {
                     return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, salt)];
                 case 5:
                     password = _a.sent();
-                    return [4 /*yield*/, subscriberModel_1.default(creator.data.data.userName).create({
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(creator.data.data.userName).create({
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
@@ -182,7 +182,7 @@ function signup(req, res) {
                         })];
                 case 6:
                     user_1 = _a.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 201,
                         message: 'User Signup successfull',
                         data: user_1
@@ -192,7 +192,7 @@ function signup(req, res) {
                 case 8:
                     error_2 = _a.sent();
                     console.log(error_2);
-                    response_1.userResponse(res, 500, {
+                    (0, response_1.userResponse)(res, 500, {
                         status: 500,
                         message: error_2,
                         data: null
@@ -204,3 +204,73 @@ function signup(req, res) {
     });
 }
 exports.signup = signup;
+function forgetPassword(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var creator, user, response, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 6, , 7]);
+                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
+                            select: {
+                                domainNames: { $in: [req.headers.cruspohost] }
+                            },
+                            project: {
+                                _id: 1,
+                                userName: 1
+                            }
+                        }, {
+                            headers: {
+                                'Content-type': 'application/json'
+                            },
+                        })];
+                case 1:
+                    creator = _a.sent();
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(creator.data.data.userName).findOne({ email: req.body.email })];
+                case 2:
+                    user = _a.sent();
+                    if (!user) return [3 /*break*/, 3];
+                    (0, response_1.userResponse)(res, 200, {
+                        status: 200,
+                        message: "User with this Email Already exists",
+                        data: null
+                    }, false);
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/forgetPassword', {
+                        email: req.body.email,
+                        creator: creator.data.data.userName
+                    }, {
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                    })];
+                case 4:
+                    response = _a.sent();
+                    if (response.data.status != 200) {
+                        (0, response_1.userResponse)(res, 403, {
+                            status: 403,
+                            message: 'Bad request',
+                        }, false);
+                        return [2 /*return*/];
+                    }
+                    (0, response_1.userResponse)(res, 200, {
+                        status: 200,
+                        message: "User doesn't exits",
+                        data: null
+                    }, false);
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_3 = _a.sent();
+                    console.log(error_3);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_3
+                    });
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.forgetPassword = forgetPassword;

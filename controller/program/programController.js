@@ -53,7 +53,7 @@ function createProgram(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).create({
                             'programTitle': req.body.programTitle,
                             'programThumbnail': req.body.programThumbnail,
                             'programDescription': req.body.programDescription,
@@ -119,7 +119,7 @@ function updatedprogram(req, res) {
             switch (_m.label) {
                 case 0:
                     _m.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.programId)];
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findById(req.params.programId)];
                 case 1:
                     program = _m.sent();
                     if (!program) return [3 /*break*/, 3];
@@ -202,7 +202,7 @@ function deleteprogram(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.programId, {
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.programId, {
                             status: "DELETED"
                         })];
                 case 1:
@@ -236,7 +236,7 @@ function getPrograms(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({
                             status: { $in: ['PUBLISHED', 'UNPUBLISHED', 'DRAFT', 'EXPIRED'] }
                         })];
                 case 1:
@@ -274,10 +274,10 @@ function getProgramById(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     program = _a.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: "Progam Fetched Successfully",
                         data: program
@@ -286,10 +286,10 @@ function getProgramById(req, res) {
                 case 2:
                     error_5 = _a.sent();
                     if (error_5.name === 'MissingSchemaError') {
-                        batchModel_1.default(res.get('userName')).createCollection();
+                        (0, batchModel_1.default)(res.get('userName')).createCollection();
                         // moduleModel(res.get('userName')).createCollection();
                     }
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 500,
                         message: error_5,
                         data: null
@@ -309,7 +309,7 @@ function createBatch(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).create({
                             batchTitle: req.body.batchTitle,
                             batchDescription: req.body.batchDescription,
                             // timingTitle:'',
@@ -322,7 +322,7 @@ function createBatch(req, res) {
                         })];
                 case 1:
                     batch = _a.sent();
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.programId, {
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.programId, {
                             $addToSet: { 'batches': batch._id }
                         })];
                 case 2:
@@ -374,7 +374,7 @@ function updateBatch(req, res) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).findById(req.params.batchId)];
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).findById(req.params.batchId)];
                 case 1:
                     batch = _c.sent();
                     if (batch) {
@@ -430,7 +430,7 @@ function deleteBatch(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, batchModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.batchId, { status: "DELETED" })];
+                    return [4 /*yield*/, (0, batchModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.batchId, { status: "DELETED" })];
                 case 1:
                     _a.sent();
                     res.status(201).send();
@@ -466,7 +466,7 @@ function getCategories(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, programCategoryModel_1.default(res.get('userName')).find()];
+                    return [4 /*yield*/, (0, programCategoryModel_1.default)(res.get('userName')).find()];
                 case 1:
                     categories = _a.sent();
                     res.status(200).send(categories);
@@ -493,19 +493,19 @@ function getUserPrograms(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 9]);
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(res.get('_id'), { programsPurchased: 1 }).populate({
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).findById(res.get('_id'), { programsPurchased: 1 }).populate({
                             path: 'programsPurchased'
                         })];
                 case 1:
                     myPrograms = _a.sent();
                     programsPurchasedId = myPrograms.programsPurchased.map(function (p) { return p._id; });
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({
                             status: 'PUBLISHED',
                             _id: { $nin: programsPurchasedId }
                         }).limit(20)];
                 case 2:
                     programs = _a.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: "My Programs fetched successfully",
                         data: {
@@ -517,22 +517,22 @@ function getUserPrograms(req, res) {
                 case 3:
                     error_9 = _a.sent();
                     if (!(error_9.name === 'MissingSchemaError')) return [3 /*break*/, 7];
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).createCollection()];
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).createCollection()];
                 case 4:
                     _a.sent();
-                    return [4 /*yield*/, subscriberModel_1.default(res.get('userName')).findById(res.get('_id'), { programsPurchased: 1 }).populate({
+                    return [4 /*yield*/, (0, subscriberModel_1.default)(res.get('userName')).findById(res.get('_id'), { programsPurchased: 1 }).populate({
                             path: 'programsPurchased'
                         })];
                 case 5:
                     myPrograms = _a.sent();
                     programsPurchasedId = myPrograms.programsPurchased.map(function (p) { return p._id; });
-                    return [4 /*yield*/, programModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, programModel_1.default)(res.get('userName')).find({
                             status: 'PUBLISHED',
                             _id: { $nin: programsPurchasedId }
                         }).limit(20)];
                 case 6:
                     programs = _a.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: "My Programs fetched successfully",
                         data: {
@@ -543,7 +543,7 @@ function getUserPrograms(req, res) {
                     return [3 /*break*/, 8];
                 case 7:
                     console.log(error_9);
-                    response_1.userResponse(res, 500, {
+                    (0, response_1.userResponse)(res, 500, {
                         status: 500,
                         message: error_9,
                         data: null

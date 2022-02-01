@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var subscriberController = __importStar(require("../../../controller/member/subscriberController"));
-var subscriberRoutes = express_1.Router();
+var subscriberRoutes = (0, express_1.Router)();
 subscriberRoutes.post('/getSubscribers', subscriberController.getSubscribers);
 subscriberRoutes.post('/createSubscriber', subscriberController.createSubscriber);
 subscriberRoutes.post('/updateSubscriber/:id', subscriberController.updateSubscriber);

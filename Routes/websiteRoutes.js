@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var express_1 = require("express");
-var websiteRoutes = express_1.Router();
+var websiteRoutes = (0, express_1.Router)();
 websiteRoutes.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var AxiosResponse, settings, error_1;
     return __generator(this, function (_a) {

@@ -51,13 +51,11 @@ var contentRoutes = require('./admin/contentRoutes');
 var programRoutes = require('./admin/programRoutes');
 var sessionRoutes = require('./admin/sessionRoutes');
 var mediaRoutes = require('./admin/mediaRoutes');
-// const websiteRoutes = require('./admin/websiteRoutes');
-// const eventRoutes = require('./admin/eventRoutes');
 var formRoutes = require('./admin/formRoutes');
 var subscriberRoutes = require('./admin/subscriberRoutes');
 var userRoutes = require('./user/index');
 var auth = require('../../middlewares/authMiddleware');
-var apiRoutes = express_1.Router();
+var apiRoutes = (0, express_1.Router)();
 apiRoutes.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

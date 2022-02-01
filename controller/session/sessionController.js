@@ -53,26 +53,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserSessions = exports.getSessionById = exports.getPastSessions = exports.getUpcomingSessions = exports.getSessions = exports.deleteSession = exports.updateSession = exports.createSession = void 0;
 var sessionModel_1 = __importDefault(require("../../models/sessionModel"));
 var response_1 = require("../response");
+var moment_1 = __importDefault(require("moment"));
+var joi_1 = __importDefault(require("joi"));
 function createSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var error, _a, startTime, endTime, startDate, endDate, start, end, minutes, hour, minutesLeft, session, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).create({
+                    _b.trys.push([0, 2, , 3]);
+                    error = createSessionValidationSchema.validate(req.body).error;
+                    if (error) {
+                        return [2 /*return*/, res.status(400).json({
+                                status: 400,
+                                message: error.details[0].message
+                            })];
+                    }
+                    _a = req.body, startTime = _a.startTime, endTime = _a.endTime, startDate = _a.startDate, endDate = _a.endDate;
+                    start = (0, moment_1.default)(startDate).hour(startTime.split(':')[0]).minute(startTime.split(':')[1]);
+                    end = (0, moment_1.default)(endDate).hour(endTime.split(':')[0]).minute(endTime.split(':')[1]);
+                    minutes = end.diff(start, 'minutes');
+                    hour = (minutes / 60) | 0;
+                    minutesLeft = minutes % 60;
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).create({
                             'sessionTitle': req.body.sessionTitle,
                             'sessionDescription': req.body.sessionDescription,
+                            'sessionThumbnail': req.body.sessionThumbnail,
                             'startDate': req.body.startDate,
-                            'startTime': req.body.startTime,
+                            'startTime': start,
+                            'endDate': req.body.endDate,
+                            'endTime': end,
+                            'duration': {
+                                hours: hour,
+                                minutes: minutesLeft
+                            },
+                            'isPaid': req.body.isPaid,
+                            'price': req.body.price,
+                            'currency': req.body.currency,
                             'sessionTimes': [],
                             'notifyViaEmail': req.body.notifyViaEmail,
                             'group': req.body.group,
-                            // 'duration':req.body.duration,
                             // 'repeatFrequency':req.body.repeatFrequency,
                         })];
                 case 1:
-                    session = _a.sent();
+                    session = _b.sent();
                     if (session.notifyViaEmail) {
                     }
                     else {
@@ -84,7 +108,7 @@ function createSession(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_1 = _a.sent();
+                    error_1 = _b.sent();
                     console.log(error_1);
                     res.status(500).json({
                         status: 500,
@@ -100,45 +124,77 @@ function createSession(req, res) {
 exports.createSession = createSession;
 function updateSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            try {
-                sessionModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
-                    'sessionTitle': req.body.sessionTitle,
-                    'sessionDescription': req.body.sessionDescription,
-                    'startDate': req.body.startDate,
-                    'startTime': req.body.startTime,
-                    'duration': req.body.duration,
-                    'repeatFrequency': req.body.repeatFrequency,
-                    'notifyViaEmail': req.body.notifyViaEmail,
-                    'group': req.body.group,
-                });
-                res.status(201).json({
-                    status: 201,
-                    message: 'Session updated successfully',
-                    data: null
-                });
+        var error, _a, startTime, endTime, startDate, endDate, start, end, minutes, hour, minutesLeft, session, error_2;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    error = createSessionValidationSchema.validate(req.body).error;
+                    if (error) {
+                        return [2 /*return*/, res.status(400).json({
+                                status: 400,
+                                message: error.details[0].message
+                            })];
+                    }
+                    _a = req.body, startTime = _a.startTime, endTime = _a.endTime, startDate = _a.startDate, endDate = _a.endDate;
+                    start = (0, moment_1.default)(startDate).hour(startTime.split(':')[0]).minute(startTime.split(':')[1]);
+                    end = (0, moment_1.default)(endDate).hour(endTime.split(':')[0]).minute(endTime.split(':')[1]);
+                    minutes = end.diff(start, 'minutes');
+                    hour = (minutes / 60) | 0;
+                    minutesLeft = minutes % 60;
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
+                            'sessionTitle': req.body.sessionTitle,
+                            'sessionDescription': req.body.sessionDescription,
+                            'sessionThumbnail': req.body.sessionThumbnail,
+                            'startDate': req.body.startDate,
+                            'endDate': req.body.endDate,
+                            $set: {
+                                'startTime': start,
+                                'endTime': end,
+                                'duration': {
+                                    hours: hour,
+                                    minutes: minutesLeft
+                                }
+                            },
+                            'isPaid': req.body.isPaid,
+                            'price': req.body.price,
+                            'currency': req.body.currency,
+                            'sessionTimes': [],
+                            'notifyViaEmail': req.body.notifyViaEmail,
+                            'group': req.body.group,
+                            // 'repeatFrequency':req.body.repeatFrequency,
+                        })];
+                case 1:
+                    session = _b.sent();
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Session updated successfully',
+                        data: session
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_2 = _b.sent();
+                    console.log(error_2);
+                    res.status(500).json({
+                        status: 500,
+                        message: error_2,
+                        data: null
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (error) {
-                console.log(error);
-                res.status(500).json({
-                    status: 500,
-                    message: error,
-                    data: null
-                });
-            }
-            return [2 /*return*/];
         });
     });
 }
 exports.updateSession = updateSession;
 function deleteSession(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_2;
+        var error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.sessionId, {
                             status: 'DELETED'
                         })];
                 case 1:
@@ -150,11 +206,11 @@ function deleteSession(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_2 = _a.sent();
-                    console.log(error_2);
+                    error_3 = _a.sent();
+                    console.log(error_3);
                     res.status(500).json({
                         status: 500,
-                        message: error_2,
+                        message: error_3,
                     });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
@@ -165,13 +221,13 @@ function deleteSession(req, res) {
 exports.deleteSession = deleteSession;
 function getSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, limit, skip, sessions, error_3;
+        var _a, select, project, limit, skip, sessions, error_4;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     sessions = _b.sent();
                     // if(req.params.type=="upcoming"){
@@ -192,11 +248,11 @@ function getSessions(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_3 = _b.sent();
-                    console.log(error_3);
+                    error_4 = _b.sent();
+                    console.log(error_4);
                     res.status(500).json({
                         status: 500,
-                        message: error_3,
+                        message: error_4,
                         data: null
                     });
                     return [3 /*break*/, 3];
@@ -208,13 +264,13 @@ function getSessions(req, res) {
 exports.getSessions = getSessions;
 function getUpcomingSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, limit, skip, sessions, error_4;
+        var _a, select, project, limit, skip, sessions, error_5;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).aggregate([
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).aggregate([
                             {
                                 $match: __assign(__assign({}, select), { startDate: { $gte: new Date(Date.now()) } }),
                             },
@@ -238,11 +294,11 @@ function getUpcomingSessions(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_4 = _b.sent();
-                    console.log(error_4);
+                    error_5 = _b.sent();
+                    console.log(error_5);
                     res.status(500).json({
                         status: 500,
-                        message: error_4,
+                        message: error_5,
                         data: null
                     });
                     return [3 /*break*/, 3];
@@ -254,13 +310,13 @@ function getUpcomingSessions(req, res) {
 exports.getUpcomingSessions = getUpcomingSessions;
 function getPastSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, limit, skip, sessions, error_5;
+        var _a, select, project, limit, skip, sessions, error_6;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).aggregate([
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).aggregate([
                             {
                                 $match: __assign(__assign({}, select), { startDate: { $lte: new Date(Date.now()) } }),
                             },
@@ -284,11 +340,11 @@ function getPastSessions(req, res) {
                     });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_5 = _b.sent();
-                    console.log(error_5);
+                    error_6 = _b.sent();
+                    console.log(error_6);
                     res.status(500).json({
                         status: 500,
-                        message: error_5,
+                        message: error_6,
                         data: null
                     });
                     return [3 /*break*/, 3];
@@ -300,12 +356,12 @@ function getPastSessions(req, res) {
 exports.getPastSessions = getPastSessions;
 function getSessionById(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, error_6;
+        var session, error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).findById(req.params.id)];
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).findById(req.params.id)];
                 case 1:
                     session = _a.sent();
                     if (session) {
@@ -324,11 +380,11 @@ function getSessionById(req, res) {
                     }
                     return [3 /*break*/, 3];
                 case 2:
-                    error_6 = _a.sent();
-                    console.log(error_6);
+                    error_7 = _a.sent();
+                    console.log(error_7);
                     res.status(500).json({
                         status: 500,
-                        message: error_6,
+                        message: error_7,
                         data: null
                     });
                     return [3 /*break*/, 3];
@@ -340,27 +396,27 @@ function getSessionById(req, res) {
 exports.getSessionById = getSessionById;
 function getUserSessions(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, select, project, limit, skip, sessions, error_7;
+        var _a, select, project, limit, skip, sessions, error_8;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, sessionModel_1.default(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, sessionModel_1.default)(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     sessions = _b.sent();
-                    response_1.userResponse(res, 200, {
+                    (0, response_1.userResponse)(res, 200, {
                         status: 200,
                         message: 'Session fetched successfully',
                         data: sessions
                     }, true);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_7 = _b.sent();
-                    console.log(error_7);
-                    response_1.userResponse(res, 500, {
+                    error_8 = _b.sent();
+                    console.log(error_8);
+                    (0, response_1.userResponse)(res, 500, {
                         status: 500,
-                        message: error_7,
+                        message: error_8,
                         data: null
                     }, false);
                     return [3 /*break*/, 3];
@@ -370,3 +426,19 @@ function getUserSessions(req, res) {
     });
 }
 exports.getUserSessions = getUserSessions;
+var createSessionValidationSchema = joi_1.default.object({
+    sessionTitle: joi_1.default.string().required(),
+    sessionDescription: joi_1.default.string().optional(),
+    sessionThumbnail: joi_1.default.string().optional(),
+    startDate: joi_1.default.date().required().less(joi_1.default.ref('endDate')),
+    startTime: joi_1.default.string().required(),
+    endDate: joi_1.default.date().required(),
+    endTime: joi_1.default.string().required(),
+    notifyViaEmail: joi_1.default.boolean().required(),
+    groups: joi_1.default.array().items(joi_1.default.string()).required(),
+    isPaid: joi_1.default.boolean().required(),
+    price: joi_1.default.number().optional(),
+    currency: joi_1.default.string().optional(),
+    isFreeForSelectedGroups: joi_1.default.boolean().optional(),
+    freeForSelectedGroups: joi_1.default.string().optional(),
+});

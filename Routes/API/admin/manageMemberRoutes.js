@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var memberControllerAPI = __importStar(require("../../../controller/member/memberControllerAPI"));
-var manageMemberRoutes = express_1.default();
+var manageMemberRoutes = (0, express_1.default)();
 manageMemberRoutes.get('/getLearners', memberControllerAPI.getMembers);
 manageMemberRoutes.post('/addmember', memberControllerAPI.addLearner);
 manageMemberRoutes.get('/members', memberControllerAPI.getMembers);

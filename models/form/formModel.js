@@ -4,24 +4,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var formSchema = new mongoose_1.default.Schema({
+var formSchema = function (prefix) { return new mongoose_1.default.Schema({
     formName: {
         type: String
     },
     isPaid: {
-        type: Boolean
+        type: Boolean,
+        required: true
     },
-    mailTemplate: {
+    price: {
+        amount: { type: Number },
+        currency: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Currency' }
+    },
+    redirectTo: {
+        type: String
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    userMailTemplate: {
         type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "".concat(prefix, "_mail")
+    },
+    creatorMailTemplate: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "".concat(prefix, "_mail")
     }
-});
+}, {
+    timestamps: true
+}); };
 function formModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_Form");
+        model = mongoose_1.default.model("".concat(prefix, "_Form"));
     }
     catch (error) {
-        model = mongoose_1.default.model(prefix + "_Form", formSchema);
+        model = mongoose_1.default.model("".concat(prefix, "_Form"), formSchema("".concat(prefix, "_Form")));
     }
     return model;
 }

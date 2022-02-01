@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -42,6 +53,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.submitForm = exports.getSubmissions = exports.getForms = exports.updateForm = exports.createForm = void 0;
 var formModel_1 = __importDefault(require("../models/form/formModel"));
 var formSubmissionModel_1 = __importDefault(require("../models/form/formSubmissionModel"));
+var axios_1 = __importDefault(require("axios"));
+var mongoose_1 = __importDefault(require("mongoose"));
+var sendMailController_1 = require("../controller/mail/sendMailController");
 function createForm(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var error_1;
@@ -49,9 +63,13 @@ function createForm(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, formModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, formModel_1.default)(res.get('userName')).create({
                             formName: req.body.formName,
                             isPaid: req.body.isPaid,
+                            price: req.body.price,
+                            userMailTemplate: req.body.userMailTemplate,
+                            creatorMailTemplate: req.body.creatorMailTemplate,
+                            redirectTo: req.body.redirectTo
                         })];
                 case 1:
                     _a.sent();
@@ -81,7 +99,11 @@ function updateForm(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, formModel_1.default(res.get('userName')).findByIdAndUpdate(req.params.id, req.body)];
+                    return [4 /*yield*/, (0, formModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
+                            formName: req.body.formName,
+                            isPaid: req.body.isPaid,
+                            mailTemplate: req.body.mailTemplate,
+                        })];
                 case 1:
                     _a.sent();
                     res.status(200).json({
@@ -111,7 +133,7 @@ function getForms(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, select = _a.select, project = _a.project, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, formModel_1.default(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, formModel_1.default)(res.get('userName')).find(select, project).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     forms = _b.sent();
                     res.status(200).json({
@@ -142,7 +164,7 @@ function getSubmissions(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, limit = _a.limit, skip = _a.skip;
-                    return [4 /*yield*/, formSubmissionModel_1.default(res.get('userName')).find({ formId: req.params.id }).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, formSubmissionModel_1.default)(res.get('userName')).find({ formId: req.params.id }).sort({ createdAt: -1 }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     formSubmissions = _b.sent();
                     res.status(200).json({
@@ -167,12 +189,101 @@ function getSubmissions(req, res) {
 exports.getSubmissions = getSubmissions;
 function submitForm(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var creator, form, data, submission, error_5;
         return __generator(this, function (_a) {
-            try {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 10, , 11]);
+                    return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
+                            "select": {
+                                "domainNames": {
+                                    "$in": [req.headers.host]
+                                }
+                            },
+                            "project": {
+                                "_id": 1,
+                                "userName": 1,
+                                "email": 1,
+                                "firstName": 1,
+                                "lastName": 1,
+                                "refreshToken": 1,
+                                "accessToken": 1
+                            }
+                        })];
+                case 1:
+                    creator = _a.sent();
+                    if (!(creator.status == 200)) return [3 /*break*/, 8];
+                    return [4 /*yield*/, (0, formModel_1.default)(creator.data.data.userName).findById(mongoose_1.default.Types.ObjectId(req.params.formId.trim()))];
+                case 2:
+                    form = _a.sent();
+                    if (!!form) return [3 /*break*/, 3];
+                    res.status(404).json({
+                        status: 404,
+                        message: 'Form not found'
+                    });
+                    return [3 /*break*/, 7];
+                case 3:
+                    data = __assign({}, req.body);
+                    data.formId = req.params.formId;
+                    return [4 /*yield*/, (0, formSubmissionModel_1.default)(creator.data.data.userName).create(data)];
+                case 4:
+                    submission = _a.sent();
+                    if (!form.userMailTemplate) return [3 /*break*/, 6];
+                    return [4 /*yield*/, (0, sendMailController_1.sendMailOnFormResponse_user)(form.userMailTemplate, submission, creator.data.data)];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6:
+                    // if(form.creatorMailTemplate){
+                    //     await sendMailOnFormResponse_creator(form.creatorMailTemplate,submission,creator.data.data);
+                    // }
+                    if (form.isPaid) {
+                        if (form.price.currency) {
+                            //     const currency = await formModel(res.get('userName')).findById(form.price.currency);
+                            //     if(!currency){
+                            //         res.status(404).json({
+                            //             status:404,
+                            //             message:'Currency not found'
+                            //         });
+                            //     }
+                            //     else{
+                            //         const price = form.price.amount * currency.rate;
+                            //         await formSubmissionModel(res.get('userName')).findByIdAndUpdate(submission._id,{
+                            //             price:price
+                            //         });
+                            //     }
+                            // }
+                        }
+                        if (form.redirectTo) {
+                            res.redirect(form.redirectTo);
+                        }
+                        else {
+                            res.status(201).json({
+                                status: 201,
+                                message: 'Form submitted succesfully',
+                                data: submission
+                            });
+                        }
+                    }
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Invalid Request'
+                    });
+                    _a.label = 9;
+                case 9: return [3 /*break*/, 11];
+                case 10:
+                    error_5 = _a.sent();
+                    console.log(error_5);
+                    res.status(500).json({
+                        status: 500,
+                        message: 'Internal Server Error'
+                    });
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/];
             }
-            catch (error) {
-            }
-            return [2 /*return*/];
         });
     });
 }

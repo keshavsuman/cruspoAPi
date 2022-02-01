@@ -2,15 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var sendMailController_1 = require("../../../controller/mail/sendMailController");
-var miscellaneous = express_1.Router();
+var miscellaneous = (0, express_1.Router)();
 miscellaneous.post('/websiteRequest', function (req, res) {
     try {
-        sendMailController_1.sendMailForWebsiteRequest(req.body.domainName);
+        (0, sendMailController_1.sendMailForWebsiteRequest)(req.body.domainName);
         res.status(200).send();
     }
     catch (error) {
-        console.log(error.message);
-        res.status(403).send(error.message);
+        console.log(error);
+        res.status(403).send(error);
     }
 });
 module.exports.miscellaneous;

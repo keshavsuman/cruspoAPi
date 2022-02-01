@@ -17,7 +17,7 @@ var LessonSchema = function (prefix) { return new mongoose_1.default.Schema({
     },
     moduleID: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_module"
+        ref: "".concat(prefix, "_module")
     },
     videoURL: {
         type: String,
@@ -28,6 +28,6 @@ var LessonSchema = function (prefix) { return new mongoose_1.default.Schema({
     }
 }); };
 function lessonModel(prefix) {
-    return mongoose_1.default.model(prefix + "_lesson", LessonSchema(prefix));
+    return mongoose_1.default.model("".concat(prefix, "_lesson"), LessonSchema(prefix));
 }
 exports.default = lessonModel;

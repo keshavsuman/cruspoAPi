@@ -50,7 +50,7 @@ function getMembers(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).find().sort({ _id: -1 }).limit(50)];
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).find().sort({ _id: -1 }).limit(50)];
                 case 1:
                     learners = _a.sent();
                     res.status(200).send(learners);
@@ -73,7 +73,7 @@ function deleteLearner(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findByIdAndDelete(req.params.learnerId)];
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).findByIdAndDelete(req.params.learnerId)];
                 case 1:
                     _a.sent();
                     res.status(200).send();
@@ -97,7 +97,7 @@ function updateLearner(req, res) {
             switch (_f.label) {
                 case 0:
                     _f.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).findById(req.params.learnerId)];
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).findById(req.params.learnerId)];
                 case 1:
                     learner = _f.sent();
                     if (!learner) return [3 /*break*/, 3];
@@ -131,7 +131,7 @@ function addLearner(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 9, , 10]);
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).find({
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).find({
                             email: req.body.email
                         })];
                 case 1:
@@ -159,7 +159,7 @@ function addLearner(req, res) {
                 case 3:
                     learnerResponse = _a.sent();
                     if (!(learnerResponse.data.length > 0)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).create({
                             firstName: learnerResponse.data[0].firstName,
                             lastName: learnerResponse.data[0].lastName,
                             email: learnerResponse.data[0].email,
@@ -187,7 +187,7 @@ function addLearner(req, res) {
                 case 6:
                     response = _a.sent();
                     if (!(response.status === 201)) return [3 /*break*/, 8];
-                    return [4 /*yield*/, learnerModel_1.default(response.data.creator.userName).create({
+                    return [4 /*yield*/, (0, learnerModel_1.default)(response.data.creator.userName).create({
                             firstName: response.data.learner.firstName,
                             lastName: response.data.learner.lastName,
                             email: response.data.learner.email,
@@ -219,13 +219,13 @@ function createGroup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 4, , 5]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).create({
                             groupName: req.body.groupName
                         })];
                 case 1:
                     group = _a.sent();
                     if (!req.body.fromExistingGroup) return [3 /*break*/, 3];
-                    return [4 /*yield*/, learnerModel_1.default(res.get('userName')).updateMany({ groupsJoined: { $elemMatch: req.body.fromExistingGroup } }, { $addToSet: { groupsJoined: group._id } })];
+                    return [4 /*yield*/, (0, learnerModel_1.default)(res.get('userName')).updateMany({ groupsJoined: { $elemMatch: req.body.fromExistingGroup } }, { $addToSet: { groupsJoined: group._id } })];
                 case 2:
                     _a.sent();
                     _a.label = 3;
@@ -250,7 +250,7 @@ function updateGroup(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 5, , 6]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).findById(req.params.groupId)];
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).findById(req.params.groupId)];
                 case 1:
                     group = _a.sent();
                     if (!group) return [3 /*break*/, 3];
@@ -282,7 +282,7 @@ function getGroups(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, groupModel_1.default(res.get('userName')).find({})];
+                    return [4 /*yield*/, (0, groupModel_1.default)(res.get('userName')).find({})];
                 case 1:
                     groups = _a.sent();
                     res.send({

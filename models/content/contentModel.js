@@ -50,7 +50,7 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
     },
     contentCollection: {
         type: [{ type: mongoose_1.default.Schema.Types.ObjectId }],
-        ref: prefix + "_collection",
+        ref: "".concat(prefix, "_collection"),
         default: []
     },
     // contentCategory:{
@@ -96,10 +96,10 @@ var contentSchema = function (prefix) { return new mongoose_1.default.Schema({
 function contentModel(prefix) {
     var content;
     try {
-        content = mongoose_1.default.model(prefix + "_content");
+        content = mongoose_1.default.model("".concat(prefix, "_content"));
     }
     catch (_a) {
-        content = mongoose_1.default.model(prefix + "_content", contentSchema(prefix));
+        content = mongoose_1.default.model("".concat(prefix, "_content"), contentSchema(prefix));
     }
     return content;
 }

@@ -10,6 +10,6 @@ var programCategorySchema = new mongoose_1.default.Schema({
     }
 });
 function programCategoryModel(prefix) {
-    return mongoose_1.default.model(prefix + "_programCategory", programCategorySchema);
+    return mongoose_1.default.model("".concat(prefix, "_programCategory"), programCategorySchema);
 }
 exports.default = programCategoryModel;

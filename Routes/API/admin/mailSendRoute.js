@@ -24,9 +24,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var mailSendController = __importStar(require("../../../controller/mail/sendMailController"));
-var mailSendRoutes = express_1.default();
-mailSendRoutes.post('/sendLearnerJoinMail', mailSendController.sendLearnerRegisterMailToCreator);
-mailSendRoutes.get('/sendRemainderMail', mailSendController.sendRemainderMail);
+var mailSendRoutes = (0, express_1.default)();
+// mailSendRoutes.post('/sendLearnerJoinMail',mailSendController.sendLearnerRegisterMailToCreator);
+// mailSendRoutes.get('/sendRemainderMail',mailSendController.sendRemainderMail);
 mailSendRoutes.post('/sendRemainderMailTest', mailSendController.sendRemainderMailTest);
-mailSendRoutes.post('/sendMailToFormResponse', mailSendController.sendMailToFormResponse);
+// mailSendRoutes.post('/sendMailToFormResponse',mailSendController.sendMailToFormResponse);
 module.exports = mailSendRoutes;

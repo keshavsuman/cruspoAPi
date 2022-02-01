@@ -24,15 +24,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var appointmentController = __importStar(require("../../../controller/appointment/appointmentController"));
-var sendMailController_1 = require("../../../controller/mail/sendMailController");
-var appointmentRouter = express_1.default();
+var appointmentRouter = (0, express_1.default)();
 appointmentRouter.get('/:id', appointmentController.getAppointmentById);
 appointmentRouter.post('/getAppointments', appointmentController.getAppointments);
 appointmentRouter.post('/getPastAppointmentBookings', appointmentController.getPastAppointmentBookings);
 appointmentRouter.post('/getUpcomingAppointmentBookings', appointmentController.getUpcomingAppointmentBookings);
 appointmentRouter.delete('/:id', appointmentController.deleteAppointment);
 appointmentRouter.post('/updateAppointment', appointmentController.updateAppointment);
-appointmentRouter.post('/sendMail', sendMailController_1.sendAppointmentRemainderMail);
 appointmentRouter.post('/createAppointment', appointmentController.createAppointments);
 appointmentRouter.post('/bookAppointment/:appointmentId', appointmentController.bookAppointment);
 /**

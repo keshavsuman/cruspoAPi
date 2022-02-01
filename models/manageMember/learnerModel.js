@@ -53,6 +53,6 @@ var learnerStatus;
     learnerStatus["DEACTIVE"] = "DEACTIVE";
 })(learnerStatus = exports.learnerStatus || (exports.learnerStatus = {}));
 function learnerModel(prefix) {
-    return mongoose_1.default.model(prefix + "_learner", learnerSchema);
+    return mongoose_1.default.model("".concat(prefix, "_learner"), learnerSchema);
 }
 exports.default = learnerModel;

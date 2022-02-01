@@ -16,7 +16,7 @@ var appointmentsBookingSchema = function (prefix) { return new mongoose_1.defaul
     },
     appointmentId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_appointments"
+        ref: "".concat(prefix, "_appointments")
     },
     timings: {
         startTime: {
@@ -34,16 +34,16 @@ var appointmentsBookingSchema = function (prefix) { return new mongoose_1.defaul
     },
     paymentRef: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: prefix + "_paymentLog"
+        ref: "".concat(prefix, "_paymentLog")
     }
 }); };
 function appointmentBookingModel(prefix) {
     var model;
     try {
-        model = mongoose_1.default.model(prefix + "_appointmentsBooking");
+        model = mongoose_1.default.model("".concat(prefix, "_appointmentsBooking"));
     }
     catch (_a) {
-        model = mongoose_1.default.model(prefix + "_appointmentsBooking", appointmentsBookingSchema(prefix));
+        model = mongoose_1.default.model("".concat(prefix, "_appointmentsBooking"), appointmentsBookingSchema(prefix));
     }
     return model;
 }

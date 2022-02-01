@@ -58,7 +58,7 @@ function getAccessToken(req, res) {
                 res.redirect(url);
             }
             catch (error) {
-                console.log(error.message);
+                console.log(error);
             }
             return [2 /*return*/];
         });

@@ -22,6 +22,6 @@ var mailTemplateSchema = new mongoose_1.default.Schema({
     timestamps: true
 });
 function mailTemplateModel(prefix) {
-    return mongoose_1.default.model(prefix + "_mailTemplate", mailTemplateSchema);
+    return mongoose_1.default.model("".concat(prefix, "_mailTemplate"), mailTemplateSchema);
 }
 exports.default = mailTemplateModel;

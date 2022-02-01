@@ -85,7 +85,7 @@ function getFiles(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, fileModel_1.default(res.get('userName')).find().sort({ _id: -1 }).limit(50)];
+                    return [4 /*yield*/, (0, fileModel_1.default)(res.get('userName')).find().sort({ _id: -1 }).limit(50)];
                 case 1:
                     files = _a.sent();
                     res.status(200).send({
@@ -113,7 +113,7 @@ function getFolders(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, folderModel_1.default(res.get('userName')).find().sort({ _id: -1 })];
+                    return [4 /*yield*/, (0, folderModel_1.default)(res.get('userName')).find().sort({ _id: -1 })];
                 case 1:
                     folders = _a.sent();
                     res.send({
@@ -144,7 +144,7 @@ function createFolder(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, folderModel_1.default(res.get('userName')).create({
+                    return [4 /*yield*/, (0, folderModel_1.default)(res.get('userName')).create({
                             folderName: req.body.folderName,
                             createdBy: res.get('_id'),
                         })];
@@ -170,7 +170,7 @@ function createFileEntry(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    file = new (fileModel_1.default(res.get('userName')))();
+                    file = new ((0, fileModel_1.default)(res.get('userName')))();
                     file.fileName = req.body.fileName,
                         file.fileSize = req.body.size,
                         file.fileType = req.body.fileType,

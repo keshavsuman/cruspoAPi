@@ -21,8 +21,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var authenticationController = __importStar(require("../../../controller/learnerController/auhthenticationController"));
-var authentication = express_1.Router();
+var authentication = (0, express_1.Router)();
 authentication.post('/login', authenticationController.login);
 authentication.post('/signup', authenticationController.signup);
-authentication.post('/update', authenticationController.updateMember);
+// authentication.post('/update',authenticationController.updateMember);
 module.exports = authentication;

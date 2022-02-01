@@ -251,16 +251,16 @@ function submitForm(req, res) {
                             //     }
                             // }
                         }
-                        if (form.redirectTo) {
-                            res.redirect(form.redirectTo);
-                        }
-                        else {
-                            res.status(201).json({
-                                status: 201,
-                                message: 'Form submitted succesfully',
-                                data: submission
-                            });
-                        }
+                    }
+                    if (form.redirectTo) {
+                        res.redirect(form.redirectTo);
+                    }
+                    else {
+                        res.status(201).json({
+                            status: 201,
+                            message: 'Form submitted succesfully',
+                            data: submission
+                        });
                     }
                     _a.label = 5;
                 case 5: return [3 /*break*/, 7];

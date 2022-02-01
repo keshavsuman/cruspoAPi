@@ -213,6 +213,7 @@ function submitForm(req, res) {
                 case 1:
                     creator = _a.sent();
                     if (!(creator.status == 200)) return [3 /*break*/, 8];
+                    console.log(mongoose_1.default.Types.ObjectId(req.params.formId.trim()));
                     return [4 /*yield*/, (0, formModel_1.default)(creator.data.data.userName).findById(mongoose_1.default.Types.ObjectId(req.params.formId.trim()))];
                 case 2:
                     form = _a.sent();

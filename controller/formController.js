@@ -194,6 +194,7 @@ function submitForm(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 10, , 11]);
+                    console.log(req.headers.host);
                     return [4 /*yield*/, axios_1.default.post('https://authentication.cruspo.com/creator/getCreatorDetails', {
                             "select": {
                                 "domainNames": {
@@ -213,6 +214,7 @@ function submitForm(req, res) {
                 case 1:
                     creator = _a.sent();
                     if (!(creator.status == 200)) return [3 /*break*/, 8];
+                    console.log(creator.data.data);
                     return [4 /*yield*/, (0, formModel_1.default)(creator.data.data.userName).findById(mongoose_1.default.Types.ObjectId(req.params.formId.trim()))];
                 case 2:
                     form = _a.sent();

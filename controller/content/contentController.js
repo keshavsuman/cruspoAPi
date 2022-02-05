@@ -358,7 +358,10 @@ function createCollection(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    contentIds = req.body.contents.map(function (content) { return mongoose_1.default.Types.ObjectId(content._id); });
+                    contentIds = [];
+                    if (req.body.contents) {
+                        contentIds = req.body.contents.map(function (content) { return mongoose_1.default.Types.ObjectId(content._id); });
+                    }
                     return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).create({
                             collectionTitle: req.body.collectionTitle,
                             collectionDescription: req.body.collectionDescription,
@@ -400,9 +403,10 @@ function updateCollection(req, res) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    contentIds = req.body.contents.map(function (content) {
-                        return mongoose_1.default.Types.ObjectId(content._id);
-                    });
+                    contentIds = [];
+                    if (req.body.contents) {
+                        contentIds = req.body.contents.map(function (content) { return mongoose_1.default.Types.ObjectId(content._id); });
+                    }
                     return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             collectionTitle: req.body.collectionTitle,
                             collectionDescription: req.body.collectionDescription,

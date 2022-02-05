@@ -29,7 +29,7 @@ contentRoutes.post('/updateContent/:id', contentController.updateContent);
 contentRoutes.delete('/deleteContent/:contentId', contentController.deleteContent);
 contentRoutes.delete('/deleteMultipleContent', contentController.deleteMultipleContent);
 contentRoutes.post('/createCollection', contentController.createCollection);
-contentRoutes.post('/updateCollection/:id', contentController.createCollection);
+contentRoutes.post('/updateCollection/:id', contentController.updateCollection);
 contentRoutes.post('/getCollection', contentController.getCollection);
 contentRoutes.delete('/deleteCollection', contentController.createCollection);
 contentRoutes.post('/getFileUploadLink', contentController.getFileUploadURL);

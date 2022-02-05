@@ -104,6 +104,7 @@ function login(req, res) {
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
+                    console.log(error_1);
                     res.status(500).send(error_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];

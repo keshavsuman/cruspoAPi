@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var collectionSchema = new mongoose_1.default.Schema({
+var collectionSchema = function (prefix) { return new mongoose_1.default.Schema({
     collectionTitle: {
         type: String
     },
@@ -14,6 +14,9 @@ var collectionSchema = new mongoose_1.default.Schema({
     collectionThumbnail: {
         type: String
     },
+    isPaid: {
+        type: Boolean
+    },
     price: {
         type: {
             currency: {
@@ -21,6 +24,9 @@ var collectionSchema = new mongoose_1.default.Schema({
                 ref: "currencies"
             },
             amount: {
+                type: Number
+            },
+            discountedPrice: {
                 type: Number
             }
         }
@@ -30,16 +36,21 @@ var collectionSchema = new mongoose_1.default.Schema({
     },
     contents: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "content"
-        }]
-});
+            ref: "".concat(prefix, "_content")
+        }],
+    status: {
+        enum: ['DRAFT', 'PUBLISHED', 'UNPUBLISHED'],
+        type: String,
+        default: "DRAFT",
+    }
+}); };
 function collectionModel(prefix) {
     var model;
     try {
         model = mongoose_1.default.model("".concat(prefix, "_collections"));
     }
     catch (error) {
-        model = mongoose_1.default.model("".concat(prefix, "_collections"), collectionSchema);
+        model = mongoose_1.default.model("".concat(prefix, "_collections"), collectionSchema(prefix));
     }
     return model;
 }

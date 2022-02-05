@@ -44,6 +44,7 @@ var contentModel_1 = __importDefault(require("../../models/content/contentModel"
 var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
 var response_1 = require("../response");
+var mongoose_1 = __importDefault(require("mongoose"));
 function getContents(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var _a, select, project, limit, skip, contentType, search, match, contents, error_1;
@@ -316,9 +317,11 @@ function getCollection(req, res) {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 5]);
                     _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
-                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).find(select, project).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).find(select, project).populate({
+                            path: "contents",
+                        }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
                 case 1:
                     collections = _b.sent();
                     res.status(200).send({
@@ -326,17 +329,23 @@ function getCollection(req, res) {
                         message: "Collection fetched successfully",
                         data: collections
                     });
-                    return [3 /*break*/, 3];
+                    return [3 /*break*/, 5];
                 case 2:
                     error_8 = _b.sent();
+                    if (!(error_8.name == 'MissingSchemaError')) return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).createCollection()];
+                case 3:
+                    _b.sent();
+                    _b.label = 4;
+                case 4:
                     console.log(error_8);
                     res.status(500).json({
                         status: 500,
                         message: error_8,
                         data: null
                     });
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -344,21 +353,22 @@ function getCollection(req, res) {
 exports.getCollection = getCollection;
 function createCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var collection, error_9;
+        var contentIds, collection, error_9;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
+                    contentIds = req.body.contents.map(function (content) { return mongoose_1.default.Types.ObjectId(content._id); });
                     return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).create({
                             collectionTitle: req.body.collectionTitle,
                             collectionDescription: req.body.collectionDescription,
                             collectionThumbnail: req.body.collectionThumbnail,
+                            isPaid: req.body.isPaid,
                             price: {
-                                currency: req.body.currency,
-                                amount: req.body.amount
+                                price: req.body.collectionPrice,
+                                currency: req.body.collectionCurrency,
                             },
-                            status: req.body.status,
-                            content: req.body.content
+                            contents: contentIds
                         })];
                 case 1:
                     collection = _a.sent();
@@ -385,19 +395,26 @@ function createCollection(req, res) {
 exports.createCollection = createCollection;
 function updateCollection(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var collection, error_10;
+        var contentIds, collection, error_10;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.collectionId, {
+                    contentIds = req.body.contents.map(function (content) {
+                        return mongoose_1.default.Types.ObjectId(content._id);
+                    });
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).findByIdAndUpdate(req.params.id, {
                             collectionTitle: req.body.collectionTitle,
                             collectionDescription: req.body.collectionDescription,
                             collectionThumbnail: req.body.collectionThumbnail,
+                            isPaid: req.body.isPaid,
                             set: {
-                                price: req.body.price,
-                                currency: req.body.currency,
+                                price: req.body.collectionPrice,
+                                currency: req.body.collectionCurrency,
                             },
+                            contents: contentIds,
+                            accessPolicy: req.body.accessPolicy,
+                            status: req.body.status,
                         })];
                 case 1:
                     collection = _a.sent();

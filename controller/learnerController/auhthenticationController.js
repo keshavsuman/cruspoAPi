@@ -179,6 +179,7 @@ function signup(req, res) {
                             email: req.body.email,
                             password: password,
                             creatorId: creator.data.data._id,
+                            country: req.body.country,
                         })];
                 case 6:
                     user_1 = _a.sent();

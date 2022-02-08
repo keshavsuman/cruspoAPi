@@ -42,6 +42,9 @@ var userSchema = function (prefix) { return new mongoose_1.default.Schema({
             }
         }
     },
+    country: {
+        type: String
+    },
     status: {
         type: String,
         default: "ACTIVE",

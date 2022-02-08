@@ -27,16 +27,10 @@ var userSchema = function (prefix) { return new mongoose_1.default.Schema({
         type: String,
         // required:true   
     },
-    programsPurchased: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_program") }]
+    isSubscribed: {
+        type: Boolean,
+        default: false
     },
-    batchesJoined: {
-        type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_batch") }]
-    },
-    // userRefId:{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     required:true
-    // },
     groupsJoined: {
         type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "".concat(prefix, "_group") }]
     },

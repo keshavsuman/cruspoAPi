@@ -25,4 +25,5 @@ var learnAuthMiddleware_1 = require("../../../middlewares/learnAuthMiddleware");
 var contentRoutes = (0, express_1.Router)();
 contentRoutes.use(learnAuthMiddleware_1.auth);
 contentRoutes.post('/getContents', contentController.getContentsByUser);
+contentRoutes.post('/getCollections', contentController.getCollectionsByUser);
 module.exports = contentRoutes;

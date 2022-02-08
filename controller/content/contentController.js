@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.getCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.updateContent = exports.createContent = exports.getContentById = exports.getContents = void 0;
+exports.getCollectionsByUser = exports.getContentsByUser = exports.getCollectionById = exports.deleteCollection = exports.updateCollection = exports.createCollection = exports.getCollection = exports.deleteMultipleContent = exports.deleteContent = exports.getFileUploadURL = exports.updateContent = exports.createContent = exports.getContentById = exports.getContents = void 0;
 var contentModel_1 = __importDefault(require("../../models/content/contentModel"));
 var collectionModel_1 = __importDefault(require("../../models/collectionModel"));
 var aws_sdk_1 = __importDefault(require("aws-sdk"));
@@ -532,3 +532,43 @@ function getContentsByUser(req, res) {
     });
 }
 exports.getContentsByUser = getContentsByUser;
+function getCollectionsByUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, select, project, skip, limit, collections, error_14;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 5]);
+                    _a = req.body, select = _a.select, project = _a.project, skip = _a.skip, limit = _a.limit;
+                    return [4 /*yield*/, (0, collectionModel_1.default)(res.get('userName')).find(select, project).populate({
+                            path: 'contents',
+                        }).limit(limit !== null && limit !== void 0 ? limit : 20).skip(skip !== null && skip !== void 0 ? skip : 0)];
+                case 1:
+                    collections = _b.sent();
+                    (0, response_1.userResponse)(res, 200, {
+                        status: 200,
+                        message: "Contents fetched",
+                        data: collections
+                    }, true);
+                    return [3 /*break*/, 5];
+                case 2:
+                    error_14 = _b.sent();
+                    if (!(error_14.name == 'MissingSchemaError')) return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, contentModel_1.default)(res.get('userName')).createCollection()];
+                case 3:
+                    _b.sent();
+                    _b.label = 4;
+                case 4:
+                    console.log(error_14);
+                    (0, response_1.userResponse)(res, 500, {
+                        status: 500,
+                        message: error_14,
+                        data: null
+                    }, false);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getCollectionsByUser = getCollectionsByUser;
